@@ -8,9 +8,13 @@ Road* Network::addRoad(Vector2 sourcePos, Vector2 destinationPos, int size)
 	return m_roads.back().get();
 }
 
-void Network::connectRoad(Road* source, Road* destination)
+void Network::connectRoad(Road* sourceRoad, Road* destinationRoad, int srcOffset, int dstOffset, std::optional<int> laneCount)
 {
-	source->getDestination()->addOutSegment(destination->getSource());
+	Node* connectionSourceNode{ sourceRoad->getDestination() };
+	Node* connectionDestinationNode{ destinationRoad->getSource() };
+	
+	if (laneCount) connectionSourceNode->addOutSegment(connectionDestinationNode, srcOffset, dstOffset, laneCount.value());
+	else connectionSourceNode->addOutSegment(connectionDestinationNode, srcOffset, dstOffset);
 }
 
 //auto Network::getRoads() const

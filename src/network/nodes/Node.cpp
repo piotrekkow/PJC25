@@ -9,16 +9,21 @@ Node::Node(Vector2 position, Vector2 tangent, int size)
 	fillNode(size);
 }
 
-Segment* Node::addOutSegment(Node* destination)
+Segment* Node::addOutSegment(Node* destination, int sourceOffset, int destinationOffset, std::optional<int> laneCount)
 {
-	m_out = std::make_unique<Segment>(this, destination);
-	destination->setInSegment(m_out.get());
-	return m_out.get();
+	int size{};
+	if (laneCount) { size = laneCount.value(); }
+	else { size = static_cast<int>(getSize()); }
+
+	std::unique_ptr<Segment> segment = std::make_unique<Segment>(this, destination, sourceOffset, destinationOffset, size);
+	m_out.emplace_back(std::move(segment));
+	destination->setInSegment(m_out.back().get());
+	return m_out.back().get();
 }
 
 void Node::setInSegment(Segment* segment)
 {
-	m_in = segment;
+	m_in.emplace_back(segment);
 }
 
 size_t Node::getSize() const
@@ -31,10 +36,6 @@ size_t Node::getSize() const
 //	return pointerView(m_vertices);
 //}
 
-Segment* Node::getOutSegment() const
-{
-	return m_out.get();
-}
 
 Vector2 Node::getPosition() const
 {

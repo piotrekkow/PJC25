@@ -11,6 +11,8 @@ class Segment
 	std::vector<std::unique_ptr<Edge>> m_edges;
 	Node* m_source;
 	Node* m_destination;
+	int m_sourceOffset;
+	int m_destinationOffset;
 
 public:
 	/**
@@ -18,16 +20,13 @@ public:
 	 * @param source Source node
 	 * @param destination Destination node
 	 */
-	Segment(Node* source, Node* destination);
+	Segment(Node* source, Node* destination, int sourceOffset, int destinationOffset, int size);
 	Node* getDestination() const;
-
-	auto getEdges() const
-	{
-		return pointerView(m_edges);
-	}
+	auto getEdges() const { return pointerView(m_edges); }
 
 private:
 	Edge* addEdge(Vertex* source, Vertex* destination);
 	int nodeSizeDifference() const;
+	bool isProposedSegmentValid(int segmentSize);
 };
 

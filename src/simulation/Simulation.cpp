@@ -18,10 +18,13 @@ void Simulation::initialize()
 	SetTargetFPS(60);
 	m_network = std::make_unique<Network>();
 	m_renderer = std::make_unique<Renderer>(m_network.get());
+	m_renderer->toggleDebug();
 
 	auto r1 = m_network->addRoad({ 100, 100 }, { 100, 200 }, 2);
 	auto r2 = m_network->addRoad({ 150, 600 }, { 190, 700 }, 2);
-	m_network->connectRoad(r1, r2);
+	auto r3 = m_network->addRoad({ 400, 100 }, { 320, 320 }, 1);
+	m_network->connectRoad(r1, r2, 0, 1, 1);
+	m_network->connectRoad(r3, r2, 0, 0, 1);
 }
 
 void Simulation::run()

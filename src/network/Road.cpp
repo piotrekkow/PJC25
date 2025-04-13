@@ -10,6 +10,7 @@ Road::Road(Vector2 sourcePos, Vector2 destinationPos, int size)
 	m_destination = std::make_unique<Node>(destinationPos, roadTangent, size);
 
 	// connect the nodes with a segment
+	m_source->addOutSegment(m_destination.get());
 }
 
 Node* Road::getSource() const
