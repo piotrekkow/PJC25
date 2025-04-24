@@ -20,11 +20,11 @@ void Simulation::initialize()
 	m_renderer = std::make_unique<Renderer>(m_network.get());
 	m_renderer->toggleDebug();
 
-	auto r1 = m_network->addRoad({ 100, 100 }, { 100, 200 }, 2);
-	auto r2 = m_network->addRoad({ 150, 600 }, { 190, 700 }, 2);
-	auto r3 = m_network->addRoad({ 400, 100 }, { 320, 320 }, 1);
-	m_network->connectRoad(r1, r2, 0, 1, 1);
-	m_network->connectRoad(r3, r2, 0, 0, 1);
+	auto link1 = m_network->addLink({ 200, 200 }, { 1400, 200 });
+	link1->getSegments()[0]->addLane();
+	link1->getSegments()[0]->addLane();
+	link1->getSegments()[0]->setCenterlineOffset(1);
+	link1->addGeometry(1, { 700, 400 });
 }
 
 void Simulation::run()

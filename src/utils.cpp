@@ -93,3 +93,8 @@ Vector2 operator-(const Vector2& v)
 {
     return { -v.x, -v.y };
 }
+
+Vector2 tangent2Normal(const Vector2& tangent)
+{
+    return { tangent.y, -tangent.x }; // instead of return { -tangent.y, tangent.x }; - consistant with Screen coordinate system where x right, y is down.
+}

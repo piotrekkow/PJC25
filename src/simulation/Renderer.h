@@ -13,9 +13,7 @@ public:
 	bool toggleDebug();
 
 private:
-	void renderRoad(const Road* road);
-	void renderSegment(const Segment* segment);
-	void renderLane(const Edge* edge);
+	void renderLink(Link* link);
 	void drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color);
 };
 

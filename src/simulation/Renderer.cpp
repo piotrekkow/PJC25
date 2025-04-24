@@ -1,7 +1,9 @@
 #include "Renderer.h"
 #include "config.h"
+#include "utils.h"
 #include <ranges>
 #include <string>
+#include <iostream>
 
 Renderer::Renderer(const Network* network) : m_network{ network }
 {
@@ -9,29 +11,9 @@ Renderer::Renderer(const Network* network) : m_network{ network }
 
 void Renderer::render()
 {
-	for (Road* road : m_network->getRoads())
+	for (auto link : m_network->getLinks())
 	{
-		renderRoad(road);
-		if (m_isDebugMode)
-		{
-			for (int i = 0; i < road->getSource()->getSize(); ++i)
-			{
-				Vertex* vertex{ getNth(road->getSource()->getVertices(), i) };
-				DrawCircleV(vertex->getPosition(), VERTEX_RADIUS, VERTEX_COLOR);
-				DrawText(std::to_string(i).c_str(), static_cast<int>(vertex->getPosition().x + VERTEX_RADIUS), static_cast<int>(vertex->getPosition().y + VERTEX_RADIUS), 20, BLACK);
-			}
-			for (int i = 0; i < road->getDestination()->getSize(); ++i)
-			{
-				Vertex* vertex{ getNth(road->getDestination()->getVertices(), i) };
-				DrawCircleV(vertex->getPosition(), VERTEX_RADIUS, VERTEX_COLOR);
-				DrawText(std::to_string(i).c_str(), static_cast<int>(vertex->getPosition().x + VERTEX_RADIUS), static_cast<int>(vertex->getPosition().y + VERTEX_RADIUS), 20, BLACK);
-			}
-			drawArrow(road->getSource()->getPosition(), road->getDestination()->getPosition(), 2, BLUE);
-			for (auto outSegment : road->getDestination()->getOutSegments())
-			{
-				drawArrow(road->getDestination()->getPosition(), outSegment->getDestination()->getPosition(), 2, BLUE);
-			}
-		}
+		renderLink(link);
 	}
 }
 
@@ -41,32 +23,67 @@ bool Renderer::toggleDebug()
 	return m_isDebugMode;
 }
 
-void Renderer::renderRoad(const Road* road)
+void Renderer::renderLink(Link* link)
 {
-	auto firstOutSegments{ road->getSource()->getOutSegments() };
-	auto secondOutSegments{ road->getDestination()->getOutSegments() };
-	
-	for (auto segment : firstOutSegments) // for (auto segment : std::views::concat(firstOutSegments, secondOutSegments)
-	{
-		renderSegment(segment);
-	}
-	for (auto segment : secondOutSegments)
-	{
-		renderSegment(segment);
-	}
-}
+    if (!link) {
+        std::cerr << "Tried to render a link which doesn't exist.\n";
+        return;
+    }
+    
+    const std::vector<Vector2>& linkGeometry{ link->getGeometry() };
 
-void Renderer::renderSegment(const Segment* segment)
-{
-	for (Edge* edge : segment->getEdges())
+	for (auto segment : link->getSegments())
 	{
-		renderLane(edge);
-	}
-}
+        const std::vector<Lane*> lanes = segment->getLanes();
+        const int centerlineOffset = segment->getCenterlineOffset();
 
-void Renderer::renderLane(const Edge* edge)
-{
-	DrawLineEx(edge->getSource()->getPosition(), edge->getDestination()->getPosition(), LANE_WIDTH, ROAD_COLOR);
+        for (size_t i = segment->getGeometrySource() + 1; i <= segment->getGeometryTarget(); ++i)
+        {
+            const Vector2& geoPointStart = linkGeometry[i - 1];
+            const Vector2& geoPointEnd = linkGeometry[i];
+
+            Vector2 tangent = normalizedTangent(geoPointStart, geoPointEnd);
+            Vector2 normal = tangent2Normal(tangent);
+
+            float currentLeftOffsetDistance = 0.0f;
+            for (int j = centerlineOffset - 1; j >= 0; --j) {
+
+                const Lane* currentLane = lanes[j];
+                float laneWidth = currentLane->getWidth();
+
+                float laneCenterOffset = currentLeftOffsetDistance + laneWidth / 2.0f;
+
+                Vector2 offsetVector = normal * laneCenterOffset;
+                Vector2 laneStart = geoPointStart + offsetVector;
+                Vector2 laneEnd = geoPointEnd + offsetVector;
+
+                DrawLineEx(laneStart, laneEnd, laneWidth, ROAD_COLOR);
+                currentLeftOffsetDistance += laneWidth;
+            }
+
+            // Draw lanes to the RIGHT of the centerline (indices >= laneCenterOffset)
+            float currentRightOffsetDistance = 0.0f;
+            for (size_t j = centerlineOffset; j < lanes.size(); ++j) {
+
+                const Lane* currentLane = lanes[j];
+                float laneWidth = currentLane->getWidth();
+
+                float laneCenterOffset = currentRightOffsetDistance + laneWidth / 2.0f;
+
+                Vector2 offsetVector = -normal * laneCenterOffset; // Negative normal for right side (right hand rule)
+                Vector2 laneStart = geoPointStart + offsetVector;
+                Vector2 laneEnd = geoPointEnd + offsetVector;
+
+                DrawLineEx(laneStart, laneEnd, laneWidth, ROAD_COLOR);
+                currentRightOffsetDistance += laneWidth;
+            }
+
+            if (m_isDebugMode)
+            {
+                DrawLineV(geoPointStart, geoPointEnd, GREEN);
+            }
+        }
+	}
 }
 
 void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color)
