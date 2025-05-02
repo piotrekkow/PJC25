@@ -6,7 +6,6 @@
 class SegmentGeometry
 {
 	std::vector<std::unique_ptr<SegmentPoint>> m_points;
-	SegmentGeometry* m_nextSegmentGeometry;
 
 public:
 	void setPoints(std::vector<Vector2> newGeometry);

@@ -18,20 +18,3 @@ const std::vector<Segment*> Link::getSegments() const
 	}
 	return segments;
 }
-
-void Link::addGeometry(int geometryId, Vector2 position)
-{
-	if (geometryId > 0 && geometryId <= m_geometry.size())
-	{
-		m_geometry.emplace(m_geometry.begin() + geometryId, position);
-		for (auto& segment : m_segments)
-		{
-			if (geometryId > segment.get()->getGeometrySource() && geometryId <=  )
-			
-		}
-	}
-}
-const std::vector<Vector2>& Link::getGeometry() const
-{
-	return m_geometry;
-}
