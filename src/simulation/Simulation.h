@@ -5,17 +5,14 @@
 class Simulation
 {
 	/** Time elapsed since the beginning of the simulation */
-	double m_totalTime{ 0 };
+	double totalTime_{ 0 };
 
 	/** Simulation speed multiplier */
-	float m_simulationSpeed{ 1.0f };
-	bool m_isPaused{ false };
+	float simulationSpeed_{ 1.0f };
+	bool isPaused_{ false };
 
-	/** One network stores all the infrastructure */
-	std::unique_ptr<Network> m_network;
-
-	/** Renderer draws the program on the screen */
-	std::unique_ptr<Renderer> m_renderer;
+	std::unique_ptr<Network> network_;
+	std::unique_ptr<Renderer> renderer_;
 
 public:
 	Simulation(bool isPaused = false, float simulationSpeed = 1.0f);

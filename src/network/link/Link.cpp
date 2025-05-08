@@ -1,20 +1,38 @@
 #include "Link.h"
+#include "utils.h"
 
-Link::Link(Vector2 centerlineStart, Vector2 centerlineEnd)
+Link::Link(Vector2 sourcePosition, Intersection* sourceIntersection, Vector2 targetPosition, Intersection* targetIntersection)
+	: sourcePosition_{ sourcePosition }
+	, targetPosition_{ targetPosition }
+	, sourceIntersection_{ sourceIntersection }
+	, targetIntersection_{ targetIntersection }
+	, length_{ vector2Distance(sourcePosition, targetPosition) }
 {
-	m_geometry.resize(2);
-	m_geometry[0] = centerlineStart;
-	m_geometry[1] = centerlineEnd;
-
-	m_segments.emplace_back(std::make_unique<Segment>());
+	addLane(13.8f);
 }
 
-const std::vector<Segment*> Link::getSegments() const
+const std::vector<Lane*> Link::getLanes() const
 {
-	std::vector<Segment*> segments;
-	for (auto& segment : m_segments)
+	std::vector<Lane*> lanes;
+	for (auto& lane : lanes_)
 	{
-		segments.emplace_back(segment.get());
+		lanes.emplace_back(lane.get());
 	}
-	return segments;
+	return lanes;
+}
+
+const Vector2& Link::getSourcePosition() const
+{
+	return sourcePosition_;
+}
+
+const Vector2& Link::getTargetPosition() const
+{
+	return targetPosition_;
+}
+
+Lane* Link::addLane(float speedLimit, float width)
+{
+	lanes_.emplace_back(std::make_unique<Lane>(this, speedLimit, width));
+	return lanes_.back().get();
 }

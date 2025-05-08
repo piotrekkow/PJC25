@@ -1,15 +1,18 @@
 #pragma once
-#include <queue>
+#include "Link.h"
+
+class Link;
 
 class Lane
 {
-	float m_width{ 35.0f };		// meters
-	float m_speedLimit{ 13.8f };	// meters/second
+	float length_;
+	float speedLimit_{ 13.8f };	// meters/second
+	float width_{ 3.5f };	// meters
+	Link* parent_;
 
 public:
 	Lane();
-	Lane(float width, float speedLimit);
-
-	const float getWidth() const;
+	Lane(Link* parent, float speedLimit, float width);
+	const Link* getParent() const;
 };
 

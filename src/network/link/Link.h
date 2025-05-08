@@ -1,20 +1,27 @@
 #pragma once
-#include "Segment.h"
+#include "Lane.h"
 #include "Intersection.h"
+#include <vector>
+#include <raylib.h>
+#include <memory>
 
 class Intersection;
 
 class Link
 {
-	std::vector<std::unique_ptr<Segment>> m_segments;
-
-	Intersection* m_startIntersection{ nullptr };
-	Intersection* m_targetIntersection{ nullptr };
+	std::vector<std::unique_ptr<Lane>> lanes_;
+	Vector2 sourcePosition_;
+	Vector2 targetPosition_;
+	Intersection* sourceIntersection_;
+	Intersection* targetIntersection_;
+	float length_;
 
 public:
-	// Link(Intersection* startIntersection, Intersection* targetIntersection);
-	Link(Vector2 centerlineStart, Vector2 centerlineEnd);
-	const std::vector<Segment*> getSegments() const;
+	Link(Vector2 sourcePosition, Intersection* sourceIntersection, Vector2 targetPosition, Intersection* targetIntersection);
+	const std::vector<Lane*> getLanes() const;
+	const Vector2& getSourcePosition() const;
+	const Vector2& getTargetPosition() const;
+	Lane* addLane(float speedLimit = 13.8f, float width = 3.5f);
 };
 
  

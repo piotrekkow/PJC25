@@ -2,8 +2,8 @@
 #include "config.h"
 
 Simulation::Simulation(bool isPaused, float simulationSpeed)
-	: m_simulationSpeed{ simulationSpeed }
-	, m_isPaused{ isPaused }
+	: simulationSpeed_{ simulationSpeed }
+	, isPaused_{ isPaused }
 {
 }
 
@@ -16,22 +16,27 @@ void Simulation::initialize()
 {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	SetTargetFPS(60);
-	m_network = std::make_unique<Network>();
-	m_renderer = std::make_unique<Renderer>(m_network.get());
-	m_renderer->toggleDebug();
-
-	auto link1 = m_network->addLink({ 200, 200 }, { 1400, 200 });
-	link1->getSegments()[0]->addLane();
-	link1->getSegments()[0]->addLane();
-	link1->getSegments()[0]->setCenterlineOffset(1);
-	link1->addGeometry(1, { 700, 400 });
+	network_ = std::make_unique<Network>();
+	renderer_ = std::make_unique<Renderer>(network_.get());
+	renderer_->toggleDebug();
+	
+	auto i1 = network_->addIntersection();
+	auto i2 = network_->addIntersection();
+	auto l1 = network_->addLink({ 100,100 }, { 200,100 }, i1, i2);
+	auto i3 = network_->addIntersection();
+	auto l2 = network_->addLink({ 300,200 }, { 300,300 }, i2, i3);
+	l2->addLane();
+	i2->addConnection(l1->getLanes()[0], l2->getLanes()[0]);
+	auto i4 = network_->addIntersection();
+	auto l3 = network_->addLink({ 400, 100 }, { 500, 100 }, i2, i4);
+	i2->addConnection(l1->getLanes()[0], l3->getLanes()[0]);
 }
 
 void Simulation::run()
 {
 	while (!WindowShouldClose())
 	{
-		if (!m_isPaused)
+		if (!isPaused_)
 		{
 			update();
 		}
@@ -41,8 +46,8 @@ void Simulation::run()
 
 void Simulation::update()
 {
-	float deltaTime{ GetFrameTime() * m_simulationSpeed };
-	m_totalTime += deltaTime;
+	float deltaTime{ GetFrameTime() * simulationSpeed_ };
+	totalTime_ += deltaTime;
 	// update vehicles here in the future
 }
 
@@ -51,7 +56,7 @@ void Simulation::render()
 	BeginDrawing();
 	ClearBackground(BACKGROUND_COLOR);
 
-	m_renderer->render();
+	renderer_->render();
 
 	EndDrawing();
 }
@@ -65,10 +70,10 @@ void Simulation::shutdown()
 
 void Simulation::pause()
 {
-	m_isPaused = true;
+	isPaused_ = true;
 }
 
 void Simulation::unpause()
 {
-	m_isPaused = false;
+	isPaused_ = false;
 }

@@ -4,13 +4,14 @@ Lane::Lane()
 {
 }
 
-Lane::Lane(float width, float speedLimit)
-	: m_width{ width }
-	, m_speedLimit{ speedLimit }
+Lane::Lane(Link* parent, float speedLimit, float width)
+	: parent_ { parent }
+	, speedLimit_ { speedLimit }
+	, width_ { width }
 {
 }
 
-const float Lane::getWidth() const
+const Link* Lane::getParent() const
 {
-	return m_width;
+	return parent_;
 }

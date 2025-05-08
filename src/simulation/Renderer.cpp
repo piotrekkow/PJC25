@@ -5,22 +5,26 @@
 #include <string>
 #include <iostream>
 
-Renderer::Renderer(const Network* network) : m_network{ network }
+Renderer::Renderer(const Network* network) : network_{ network }
 {
 }
 
 void Renderer::render()
 {
-	for (auto link : m_network->getLinks())
+	for (auto link : network_->getLinks())
 	{
 		renderLink(link);
+	}
+	for (auto intersection : network_->getIntersections())
+	{
+		renderIntersection(intersection);
 	}
 }
 
 bool Renderer::toggleDebug()
 {
-	m_isDebugMode = !m_isDebugMode;
-	return m_isDebugMode;
+	isDebugMode_ = !isDebugMode_;
+	return isDebugMode_;
 }
 
 void Renderer::renderLink(Link* link)
@@ -29,60 +33,39 @@ void Renderer::renderLink(Link* link)
         std::cerr << "Tried to render a link which doesn't exist.\n";
         return;
     }
-    
-    const std::vector<Vector2>& linkGeometry{ link->getGeometry() };
+	
+	Vector2 linkTangent{ normalizedTangent(link->getTargetPosition(), link->getSourcePosition()) };
+	Vector2 linkNormal{ tangent2Normal(linkTangent) };
 
-	for (auto segment : link->getSegments())
+	for (auto& lane : link->getLanes())
 	{
-        const std::vector<Lane*> lanes = segment->getLanes();
-        const int centerlineOffset = segment->getCenterlineOffset();
+		if (lane)
+		{
+			DrawLineEx(link->getSourcePosition(), link->getTargetPosition(), LANE_WIDTH, ROAD_COLOR);
+		}
+	}
+	
+}
 
-        for (size_t i = segment->getGeometrySource() + 1; i <= segment->getGeometryTarget(); ++i)
-        {
-            const Vector2& geoPointStart = linkGeometry[i - 1];
-            const Vector2& geoPointEnd = linkGeometry[i];
+void Renderer::renderIntersection(Intersection* intersection)
+{
+	if (!intersection) {
+		std::cerr << "Tried to render an intersection which doesn't exist.\n";
+	}
 
-            Vector2 tangent = normalizedTangent(geoPointStart, geoPointEnd);
-            Vector2 normal = tangent2Normal(tangent);
+	if (intersection->getConnections().empty())
+	{
+		return;
+	}
 
-            float currentLeftOffsetDistance = 0.0f;
-            for (int j = centerlineOffset - 1; j >= 0; --j) {
-
-                const Lane* currentLane = lanes[j];
-                float laneWidth = currentLane->getWidth();
-
-                float laneCenterOffset = currentLeftOffsetDistance + laneWidth / 2.0f;
-
-                Vector2 offsetVector = normal * laneCenterOffset;
-                Vector2 laneStart = geoPointStart + offsetVector;
-                Vector2 laneEnd = geoPointEnd + offsetVector;
-
-                DrawLineEx(laneStart, laneEnd, laneWidth, ROAD_COLOR);
-                currentLeftOffsetDistance += laneWidth;
-            }
-
-            // Draw lanes to the RIGHT of the centerline (indices >= laneCenterOffset)
-            float currentRightOffsetDistance = 0.0f;
-            for (size_t j = centerlineOffset; j < lanes.size(); ++j) {
-
-                const Lane* currentLane = lanes[j];
-                float laneWidth = currentLane->getWidth();
-
-                float laneCenterOffset = currentRightOffsetDistance + laneWidth / 2.0f;
-
-                Vector2 offsetVector = -normal * laneCenterOffset; // Negative normal for right side (right hand rule)
-                Vector2 laneStart = geoPointStart + offsetVector;
-                Vector2 laneEnd = geoPointEnd + offsetVector;
-
-                DrawLineEx(laneStart, laneEnd, laneWidth, ROAD_COLOR);
-                currentRightOffsetDistance += laneWidth;
-            }
-
-            if (m_isDebugMode)
-            {
-                DrawLineV(geoPointStart, geoPointEnd, GREEN);
-            }
-        }
+	for (auto& connection : intersection->getConnections())
+	{
+		if (connection)
+		{
+			Vector2 inletPosition = connection->getInlet()->getParent()->getTargetPosition();
+			Vector2 outletPosition = connection->getOutlet()->getParent()->getSourcePosition();
+			drawArrow(inletPosition, outletPosition, 2.0f, TANGENT_COLOR);
+		}
 	}
 }
 

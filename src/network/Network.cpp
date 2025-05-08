@@ -4,18 +4,34 @@ Network::Network()
 {
 }
 
-Link* Network::addLink(Vector2 startPosition, Vector2 targetPosition)
+Intersection* Network::addIntersection()
 {
-	m_links.emplace_back(std::make_unique<Link>(startPosition, targetPosition));
-	return m_links.back().get();
+	intersections_.emplace_back(std::make_unique<Intersection>());
+	return intersections_.back().get();
+}
+
+Link* Network::addLink(Vector2 sourcePosition, Vector2 targetPosition, Intersection* sourceIntersection, Intersection* targetIntersection)
+{
+	links_.emplace_back(std::make_unique<Link>(sourcePosition, sourceIntersection, targetPosition, targetIntersection));
+	return links_.back().get();
 }
 
 const std::vector<Link*> Network::getLinks() const
 {
 	std::vector<Link*> links;
-	for (auto& link : m_links)
+	for (auto& link : links_)
 	{
 		links.emplace_back(link.get());
 	}
 	return links;
+}
+
+const std::vector<Intersection*> Network::getIntersections() const
+{
+	std::vector<Intersection*> intersections;
+	for (auto& intersection : intersections_)
+	{
+		intersections.emplace_back(intersection.get());
+	}
+	return intersections;
 }

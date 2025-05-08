@@ -1,16 +1,18 @@
 #pragma once
 #include "Intersection.h"
+#include "Link.h"
 
 class Network
 {
-	std::vector<std::unique_ptr<Intersection>> m_intersections;
-	std::vector<std::unique_ptr<Link>> m_links;
+	std::vector<std::unique_ptr<Intersection>> intersections_;
+	std::vector<std::unique_ptr<Link>> links_;
 
 public:
 	Network();
-	
-	Link* addLink(Vector2 startPosition, Vector2 targetPosition);
+	Intersection* addIntersection();
+	Link* addLink(Vector2 sourcePosition, Vector2 targetPosition, Intersection* sourceIntersection, Intersection* targetIntersection);
 	const std::vector<Link*> getLinks() const;
+	const std::vector<Intersection*> getIntersections() const;
 };
 
 
