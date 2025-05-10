@@ -1,18 +1,21 @@
 #pragma once
 #include "Link.h"
+#include <raylib.h>
+// #include "Connection.h"
 
 class Link;
+// class Connection;
 
 class Lane
 {
-	float length_;
-	float speedLimit_{ 13.8f };	// meters/second
-	float width_{ 3.5f };	// meters
+	// std::vector<Connection*> nextConnections_;
 	Link* parent_;
+	int id_;
 
 public:
-	Lane();
-	Lane(Link* parent, float speedLimit, float width);
+	Lane(int id, Link* parent);
 	const Link* getParent() const;
+	const Vector2 getOutletPosition() const;
+	const Vector2 getInletPosition() const;
 };
 

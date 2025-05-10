@@ -6,9 +6,8 @@ Link::Link(Vector2 sourcePosition, Intersection* sourceIntersection, Vector2 tar
 	, targetPosition_{ targetPosition }
 	, sourceIntersection_{ sourceIntersection }
 	, targetIntersection_{ targetIntersection }
-	, length_{ vector2Distance(sourcePosition, targetPosition) }
 {
-	addLane(13.8f);
+	addLane();
 }
 
 const std::vector<Lane*> Link::getLanes() const
@@ -31,8 +30,34 @@ const Vector2& Link::getTargetPosition() const
 	return targetPosition_;
 }
 
-Lane* Link::addLane(float speedLimit, float width)
+const float Link::getLaneWidth() const
 {
-	lanes_.emplace_back(std::make_unique<Lane>(this, speedLimit, width));
+	return laneWidth_;
+}
+
+Lane* Link::addLane()
+{
+	int id;
+	if (lanes_.empty())
+	{
+		id = 0;
+	}
+	else
+	{
+		id = static_cast<int>(lanes_.size());
+	}
+
+	lanes_.emplace_back(std::make_unique<Lane>(id, this));
 	return lanes_.back().get();
+}
+
+const Vector2 Link::getNormal() const
+{
+	Vector2 tangent{ normalizedTangent(sourcePosition_, targetPosition_) };
+	return -tangent2Normal(tangent);
+}
+
+float Link::length()
+{
+	return vector2Distance(sourcePosition_, targetPosition_);
 }

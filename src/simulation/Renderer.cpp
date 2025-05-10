@@ -34,17 +34,11 @@ void Renderer::renderLink(Link* link)
         return;
     }
 	
-	Vector2 linkTangent{ normalizedTangent(link->getTargetPosition(), link->getSourcePosition()) };
-	Vector2 linkNormal{ tangent2Normal(linkTangent) };
-
 	for (auto& lane : link->getLanes())
 	{
-		if (lane)
-		{
-			DrawLineEx(link->getSourcePosition(), link->getTargetPosition(), LANE_WIDTH, ROAD_COLOR);
-		}
+		DrawLineEx(lane->getInletPosition(), lane->getOutletPosition(), link->getLaneWidth(), ROAD_COLOR);
 	}
-	
+	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->getNormal() * 50.0f, 3.0f, PURPLE);
 }
 
 void Renderer::renderIntersection(Intersection* intersection)
@@ -57,13 +51,13 @@ void Renderer::renderIntersection(Intersection* intersection)
 	{
 		return;
 	}
-
+	
 	for (auto& connection : intersection->getConnections())
 	{
 		if (connection)
 		{
-			Vector2 inletPosition = connection->getInlet()->getParent()->getTargetPosition();
-			Vector2 outletPosition = connection->getOutlet()->getParent()->getSourcePosition();
+			Vector2 inletPosition = connection->getInlet()->getOutletPosition();
+			Vector2 outletPosition = connection->getOutlet()->getInletPosition();
 			drawArrow(inletPosition, outletPosition, 2.0f, TANGENT_COLOR);
 		}
 	}
@@ -75,7 +69,7 @@ void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color colo
 
 	Vector2 direction = vector2Normalize(end - start);
 
-	float arrowSize = 10.0f;
+	float arrowSize = lineWidth * 4.0f;
 	float arrowAngle = 30.0f * DEG2RAD;
 
 	Vector2 leftWing = {

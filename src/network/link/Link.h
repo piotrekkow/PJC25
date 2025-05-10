@@ -1,8 +1,8 @@
 #pragma once
 #include "Lane.h"
 #include "Intersection.h"
-#include <vector>
 #include <raylib.h>
+#include <vector>
 #include <memory>
 
 class Intersection;
@@ -14,14 +14,20 @@ class Link
 	Vector2 targetPosition_;
 	Intersection* sourceIntersection_;
 	Intersection* targetIntersection_;
-	float length_;
+	float speedLimit_{ 13.8f }; // meters per second
+	float laneWidth_{ 13.5f }; // meters
 
 public:
 	Link(Vector2 sourcePosition, Intersection* sourceIntersection, Vector2 targetPosition, Intersection* targetIntersection);
 	const std::vector<Lane*> getLanes() const;
 	const Vector2& getSourcePosition() const;
 	const Vector2& getTargetPosition() const;
-	Lane* addLane(float speedLimit = 13.8f, float width = 3.5f);
+	const float getLaneWidth() const;
+	Lane* addLane();
+	const Vector2 getNormal() const;
+
+private:
+	float length();
 };
 
  
