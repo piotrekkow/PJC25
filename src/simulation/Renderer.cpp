@@ -38,9 +38,10 @@ void Renderer::renderLink(Link* link)
 	
 	for (auto& lane : link->getLanes())
 	{
-		DrawLineEx(lane->startPosition(), lane->endPosition(), link->getLaneWidth(), ROAD_COLOR);
+		drawArrow(lane->startPosition(), lane->endPosition(), 2.0f, ROAD_COLOR);
 	}
-	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * 50.0f, 3.0f, PURPLE);
+	drawArrow(link->getSourcePosition(), link->getTargetPosition(), 1.0f, BLACK);
+	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()), 1.0f, PURPLE);
 }
 
 void Renderer::renderIntersection(Intersection* intersection)

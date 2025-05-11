@@ -130,8 +130,8 @@ bool lineIntersection(Vector2 p1, Vector2 dir1, Vector2 p2, Vector2 dir2, Vector
     float det{ dir1.x * dir2.y - dir1.y * dir2.x };
     if (std::abs(det) < 1e-3f) return false; // lines parallel
 
-    Vector2 diff{ p1 - p2 };
-    float s{ diff.x * dir2.y - diff.y * dir2.x };
-    intersectionPoint = p1 + dir1 * s;
+    Vector2 diff{ p2 - p1 };
+    float t{ (diff.x * dir2.y - diff.y * dir2.x) / det };
+    intersectionPoint = p1 + dir1 * t;
     return true;
 }

@@ -7,6 +7,7 @@ ConnectionCurved::ConnectionCurved(Lane* inletLane, Lane* outletLane, Vector2 co
 	, controlPoint_{ controlPoint }
 	, totalLength_{ 0.0f }
 {
+	calculatePath(10);
 }
 
 const float ConnectionCurved::length() const
