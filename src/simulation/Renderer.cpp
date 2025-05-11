@@ -1,9 +1,11 @@
 #include "Renderer.h"
+#include "Connection.h"
 #include "config.h"
 #include "utils.h"
 #include <ranges>
 #include <string>
 #include <iostream>
+
 
 Renderer::Renderer(const Network* network) : network_{ network }
 {
@@ -43,24 +45,32 @@ void Renderer::renderLink(Link* link)
 
 void Renderer::renderIntersection(Intersection* intersection)
 {
-	if (!intersection) {
-		std::cerr << "Tried to render an intersection which doesn't exist.\n";
-	}
-
-	if (intersection->getConnections().empty())
-	{
-		return;
-	}
-	
-	for (auto& connection : intersection->getConnections())
-	{
-		if (connection)
+	if (intersection) {
+		if (intersection->getConnections().empty())
 		{
-			Vector2 inletPosition = connection->previousLane()->endPosition();
-			Vector2 outletPosition = connection->nextLane()->startPosition();
-			drawArrow(inletPosition, outletPosition, 2.0f, TANGENT_COLOR);
+			return;
+		}
+
+		for (auto& connection : intersection->getConnections())
+		{
+			if (connection)
+			{
+				std::vector<Vector2> geometry{ connection->geometry() };
+				for (size_t i = 1; i < geometry.size(); ++i)
+				{
+					if (i < geometry.size() - 1)
+					{
+						DrawLineEx(geometry[i - 1], geometry[i], 2.0f, BLUE);
+					}
+					else
+					{
+						drawArrow(geometry[i - 1], geometry[i], 2.0f, BLUE);
+					}
+				}
+			}
 		}
 	}
+	else std::cerr << "Tried to render an intersection which doesn't exist.\n";
 }
 
 void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color)

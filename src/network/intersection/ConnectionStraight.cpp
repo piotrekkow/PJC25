@@ -17,8 +17,18 @@ Vector2 ConnectionStraight::positionAtDistance(float distance) const
 	return startPosition() + tangentAtDistance(distance) * clampedDistance;
 }
 
-Vector2 ConnectionStraight::tangentAtDistance(float distance) const
+Vector2 ConnectionStraight::tangentAtDistance([[maybe_unused]] float distance) const
 {
 	return normalizedTangent(startPosition(), endPosition());
+}
+
+const std::vector<Vector2> ConnectionStraight::geometry() const
+{
+	std::vector<Vector2> geometry;
+	geometry.reserve(2);
+	geometry.push_back(startPosition());
+	geometry.push_back(endPosition());
+
+	return geometry;
 }
 

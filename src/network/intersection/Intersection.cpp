@@ -5,6 +5,8 @@
 #include "Connection.h"
 #include <cmath>
 
+Intersection::~Intersection() = default;
+
 void Intersection::addIncomingLink(Link* link)
 {
 	incomingLinks_.emplace_back(link);

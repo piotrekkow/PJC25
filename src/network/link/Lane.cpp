@@ -27,7 +27,7 @@ const float Lane::length() const {
     return parent_->length();
 }
 
-Vector2 Lane::tangentAtDistance(float distance) const {
+Vector2 Lane::tangentAtDistance([[maybe_unused]] float distance) const {
     Vector2 tangent = endPosition() - startPosition();
     if (vector2Length(tangent) < 1e-3f) {
         if (parent_ && parent_->length() > 0.0001f) {

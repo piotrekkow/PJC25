@@ -49,6 +49,11 @@ Vector2 ConnectionCurved::tangentAtDistance(float distance) const
 	return normalizedTangent(segmentStartPoint, segmentEndPoint);
 }
 
+const std::vector<Vector2> ConnectionCurved::geometry() const
+{
+	return pathPoints_;
+}
+
 void ConnectionCurved::calculatePath(int numberOfSegments)
 {
 	pathPoints_.clear();
