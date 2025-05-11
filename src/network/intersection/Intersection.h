@@ -1,14 +1,17 @@
 #pragma once
 
 #include "Link.h"
-#include "Connection.h"
 #include <vector>
 #include <memory>
+#include <cmath>
 
 class Link;
 class Connection;
 class Lane;
 
+/**
+* @brief Road intersection between links
+*/
 class Intersection
 {
 	std::vector<Link*> incomingLinks_;
@@ -20,7 +23,7 @@ public:
 	Intersection() = default;
 	void addIncomingLink(Link* link);
 	void addOutgoingLink(Link* link);
-	Connection* addConnection(Lane* inlet, Lane* outlet);
+	Connection* addConnection(Lane* inlet, Lane* outlet, float angleThreshold = 30.0f * 3.1415f / 180/*DEG2RAD*/);
 	const std::vector<Connection*> getConnections() const;
 };
 

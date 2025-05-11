@@ -1,19 +1,37 @@
 #include "Connection.h"
 #include "utils.h"
+#include <iostream>
 
-Connection::Connection(Lane* inlet, Lane* outlet)
-	: inlet_{ inlet }
-	, outlet_{ outlet }
+Connection::Connection(Lane* inletLane, Lane* outletLane)
+	: previousLane_{ inletLane }
+	, nextLane_{ outletLane }
 {
-	length_ = vector2Distance(inlet_->getParent()->getSourcePosition(), outlet_->getParent()->getTargetPosition());
+	if (!previousLane_)
+	{
+		std::cerr << "Connection pointing to a null previous lane\n";
+	}
+	if (!nextLane_)
+	{
+		std::cerr << "Connection pointing to a null next lane\n";
+	}
 }
 
-const Lane* Connection::getInlet() const
+const Lane* Connection::previousLane() const
 {
-	return inlet_;
+	return previousLane_;
 }
 
-const Lane* Connection::getOutlet() const
+const Lane* Connection::nextLane() const
 {
-	return outlet_;
+	return nextLane_;
+}
+
+const Vector2 Connection::startPosition() const
+{
+	return previousLane()->endPosition();
+}
+
+const Vector2 Connection::endPosition() const
+{
+	return nextLane()->startPosition();
 }

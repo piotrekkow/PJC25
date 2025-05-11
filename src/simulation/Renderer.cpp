@@ -36,9 +36,9 @@ void Renderer::renderLink(Link* link)
 	
 	for (auto& lane : link->getLanes())
 	{
-		DrawLineEx(lane->getInletPosition(), lane->getOutletPosition(), link->getLaneWidth(), ROAD_COLOR);
+		DrawLineEx(lane->startPosition(), lane->endPosition(), link->getLaneWidth(), ROAD_COLOR);
 	}
-	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->getNormal() * 50.0f, 3.0f, PURPLE);
+	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * 50.0f, 3.0f, PURPLE);
 }
 
 void Renderer::renderIntersection(Intersection* intersection)
@@ -56,8 +56,8 @@ void Renderer::renderIntersection(Intersection* intersection)
 	{
 		if (connection)
 		{
-			Vector2 inletPosition = connection->getInlet()->getOutletPosition();
-			Vector2 outletPosition = connection->getOutlet()->getInletPosition();
+			Vector2 inletPosition = connection->previousLane()->endPosition();
+			Vector2 outletPosition = connection->nextLane()->startPosition();
 			drawArrow(inletPosition, outletPosition, 2.0f, TANGENT_COLOR);
 		}
 	}

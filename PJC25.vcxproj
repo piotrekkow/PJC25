@@ -133,6 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\network\Segment.cpp" />
+    <ClCompile Include="src\network\intersection\ConnectionCurved.cpp" />
+    <ClCompile Include="src\network\intersection\ConnectionStraight.cpp" />
     <ClCompile Include="src\network\intersection\Connection.cpp" />
     <ClCompile Include="src\network\Network.cpp" />
     <ClCompile Include="src\network\intersection\Intersection.cpp" />
@@ -144,6 +147,9 @@
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\network\Segment.h" />
+    <ClInclude Include="src\network\intersection\ConnectionCurved.h" />
+    <ClInclude Include="src\network\intersection\ConnectionStraight.h" />
     <ClInclude Include="src\network\intersection\Connection.h" />
     <ClInclude Include="src\network\Network.h" />
     <ClInclude Include="src\network\intersection\Intersection.h" />

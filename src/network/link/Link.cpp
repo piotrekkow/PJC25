@@ -51,13 +51,13 @@ Lane* Link::addLane()
 	return lanes_.back().get();
 }
 
-const Vector2 Link::getNormal() const
+const Vector2 Link::normal() const
 {
 	Vector2 tangent{ normalizedTangent(sourcePosition_, targetPosition_) };
 	return -tangent2Normal(tangent);
 }
 
-float Link::length()
+const float Link::length() const
 {
 	return vector2Distance(sourcePosition_, targetPosition_);
 }

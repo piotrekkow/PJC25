@@ -1,21 +1,27 @@
 #pragma once
 #include "Link.h"
-#include <raylib.h>
 // #include "Connection.h"
+#include "Segment.h"
 
 class Link;
 // class Connection;
 
-class Lane
+class Lane :
+	public Segment
 {
-	// std::vector<Connection*> nextConnections_;
+	/// Parent link
 	Link* parent_;
+	/// Used to determine position within the parent
 	int id_;
 
 public:
 	Lane(int id, Link* parent);
-	const Link* getParent() const;
-	const Vector2 getOutletPosition() const;
-	const Vector2 getInletPosition() const;
+	const Link* parent() const;
+	const Vector2 endPosition() const override;
+	const Vector2 startPosition() const override;
+
+	const float length() const override;
+	Vector2 positionAtDistance(float distance) const override;
+	Vector2 tangentAtDistance(float distance) const override;
 };
 

@@ -2,6 +2,9 @@
 #include "Intersection.h"
 #include "Link.h"
 
+/**
+* @brief Manages all the infrastructure - the road network
+*/
 class Network
 {
 	std::vector<std::unique_ptr<Intersection>> intersections_;

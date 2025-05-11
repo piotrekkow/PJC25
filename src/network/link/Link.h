@@ -7,6 +7,9 @@
 
 class Intersection;
 
+/**
+* @brief A road with lanes linking two intersections
+*/
 class Link
 {
 	std::vector<std::unique_ptr<Lane>> lanes_;
@@ -24,10 +27,8 @@ public:
 	const Vector2& getTargetPosition() const;
 	const float getLaneWidth() const;
 	Lane* addLane();
-	const Vector2 getNormal() const;
-
-private:
-	float length();
+	const Vector2 normal() const;
+	const float length() const;
 };
 
  
