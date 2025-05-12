@@ -99,15 +99,20 @@ Vector2 tangent2Normal(Vector2 tangent)
     return { tangent.y, -tangent.x }; // instead of return { -tangent.y, tangent.x }; - consistant with Screen coordinate system where x right, y is down.
 }
 
-float vector2Dot(Vector2 v1, Vector2 v2)
+float dot(Vector2 v1, Vector2 v2)
 {
     return { v1.x * v2.x + v1.y * v2.y };
+}
+
+float det(Vector2 v1, Vector2 v2)
+{
+	return { v1.x * v2.y - v1.y * v2.x };
 }
 
 float vector2Angle(Vector2 v1, Vector2 v2)
 {
     if (vector2Length(v1) < 1e-3f || vector2Length(v2) < 1e-3f) return 0.0f;
-    float cosTheta{ vector2Dot(v1, v2) / (std::sqrt(vector2Length(v1)) * std::sqrt(vector2Length(v2))) };
+    float cosTheta{ dot(v1, v2) / (std::sqrt(vector2Length(v1)) * std::sqrt(vector2Length(v2))) };
     cosTheta = std::max(-1.0f, std::min(1.0f, cosTheta));
     return std::acos(cosTheta);
 }
@@ -127,11 +132,39 @@ Vector2 quadBezierPoint(Vector2 start, Vector2 control, Vector2 end, float t)
 
 bool lineIntersection(Vector2 p1, Vector2 dir1, Vector2 p2, Vector2 dir2, Vector2& intersectionPoint)
 {
-    float det{ dir1.x * dir2.y - dir1.y * dir2.x };
-    if (std::abs(det) < 1e-3f) return false; // lines parallel
+    if (std::abs(det(dir1, dir2)) < 1e-3f) return false; // lines parallel
 
     Vector2 diff{ p2 - p1 };
-    float t{ (diff.x * dir2.y - diff.y * dir2.x) / det };
+    float t{ (diff.x * dir2.y - diff.y * dir2.x) / det(dir1, dir2) };
     intersectionPoint = p1 + dir1 * t;
     return true;
+}
+
+/**
+* @brief Calculates the intersection of two line segments.
+* @return -1.0f if no intersection, otherwise the distance from p1 to the intersection point.
+*/
+float lineIntersectionCap(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
+{
+    // direction vectors
+    Vector2 r{ p2 - p1 };
+    Vector2 s{ q2 - q1 };
+
+    if (std::abs(det(r, s)) < 1e-5f)
+    {
+		return -1.0f; // lines are parallel
+    }
+
+    Vector2 c = q1 - p1;
+    // distance p1 to intersection
+    float t = det(c, s) / det(r, s);
+	// distance q1 to intersection
+    float u = det(c, r) / det(r, s);
+
+    // Check if intersection is within both line segments
+    if (t >= 0.0f && t <= 1.0f && u >= 0.0f && u <= 1.0f)
+    {
+        return t;
+    }
+    return -1.0f; // no intersection
 }

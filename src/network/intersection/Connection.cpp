@@ -35,3 +35,20 @@ const Vector2 Connection::endPosition() const
 {
 	return nextLane()->startPosition();
 }
+
+CollisionArea* Connection::addCollisionArea(Connection* collidingConnection, float collisionDistance, std::optional<TrafficPriority> priority)
+{
+	auto collisionArea = std::make_unique<CollisionArea>(this, collidingConnection, collisionDistance, priority);
+	collisionAreas_.emplace_back(std::move(collisionArea));
+	return collisionAreas_.back().get();
+}
+
+const std::vector<CollisionArea*> Connection::getCollisionAreas() const
+{
+	std::vector<CollisionArea*> collisionAreas;
+	for (auto& collisionArea : collisionAreas_)
+	{
+		collisionAreas.emplace_back(collisionArea.get());
+	}
+	return collisionAreas;
+}

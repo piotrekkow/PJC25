@@ -70,6 +70,20 @@ void Renderer::renderIntersection(Intersection* intersection)
 				}
 			}
 		}
+		for (auto& connection : intersection->getConnections())
+		{
+			if (connection)
+			{
+				for (auto& collisionPoint : connection->getCollisionAreas())
+				{
+					if (collisionPoint)
+					{
+						Vector2 point{ connection->positionAtDistance(collisionPoint->collisionDistance()) };
+						DrawCircleV(point, 3.0f, RED);
+					}
+				}
+			}
+		}
 	}
 	else std::cerr << "Tried to render an intersection which doesn't exist.\n";
 }

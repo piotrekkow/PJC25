@@ -63,6 +63,8 @@ void Simulation::initialize()
 	i->addConnection(nlin->getLanes()[1], slout->getLanes()[1]);
 	i->addConnection(nlin->getLanes()[0], slout->getLanes()[0]);
 	i->addConnection(nlin->getLanes()[0], elout->getLanes()[0]);
+
+	i->updateCollisionPoints();
 }
 
 void Simulation::run()
