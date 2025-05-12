@@ -35,13 +35,16 @@ void Renderer::renderLink(Link* link)
         std::cerr << "Tried to render a link which doesn't exist.\n";
         return;
     }
-	
 	for (auto& lane : link->getLanes())
 	{
-		drawArrow(lane->startPosition(), lane->endPosition(), 2.0f, ROAD_COLOR);
+		if (!isDebugMode_) DrawLineEx(lane->startPosition(), lane->endPosition(), link->getLaneWidth(), ROAD_COLOR);
+		else DrawLineEx(lane->startPosition(), lane->endPosition(), 2.0f, ROAD_COLOR);
 	}
-	drawArrow(link->getSourcePosition(), link->getTargetPosition(), 1.0f, BLACK);
-	drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()), 1.0f, PURPLE);
+	if (isDebugMode_)
+	{
+		drawArrow(link->getSourcePosition(), link->getTargetPosition(), 1.0f, BLACK);
+		drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()), 1.0f, PURPLE);
+	}
 }
 
 void Renderer::renderIntersection(Intersection* intersection)
@@ -52,6 +55,7 @@ void Renderer::renderIntersection(Intersection* intersection)
 			return;
 		}
 
+
 		for (auto& connection : intersection->getConnections())
 		{
 			if (connection)
@@ -59,7 +63,11 @@ void Renderer::renderIntersection(Intersection* intersection)
 				std::vector<Vector2> geometry{ connection->geometry() };
 				for (size_t i = 1; i < geometry.size(); ++i)
 				{
-					if (i < geometry.size() - 1)
+					if (!isDebugMode_ && i < geometry.size())
+					{
+						DrawLineEx(geometry[i - 1], geometry[i], 13.5f, ROAD_COLOR);
+					}
+					else if (i < geometry.size() - 1)
 					{
 						DrawLineEx(geometry[i - 1], geometry[i], 2.0f, BLUE);
 					}
@@ -70,16 +78,19 @@ void Renderer::renderIntersection(Intersection* intersection)
 				}
 			}
 		}
-		for (auto& connection : intersection->getConnections())
+		if (isDebugMode_)
 		{
-			if (connection)
+			for (auto& connection : intersection->getConnections())
 			{
-				for (auto& collisionPoint : connection->getCollisionAreas())
+				if (connection)
 				{
-					if (collisionPoint)
+					for (auto& collisionPoint : connection->getCollisionAreas())
 					{
-						Vector2 point{ connection->positionAtDistance(collisionPoint->collisionDistance()) };
-						DrawCircleV(point, 3.0f, RED);
+						if (collisionPoint)
+						{
+							Vector2 point{ connection->positionAtDistance(collisionPoint->collisionDistance()) };
+							DrawCircleV(point, 3.0f, RED);
+						}
 					}
 				}
 			}

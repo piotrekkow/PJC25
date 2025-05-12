@@ -69,26 +69,43 @@ void Intersection::updateCollisionPoints()
 	}
 }
 
-// optimize by searching for the same point once across connection and collisionConnection
+
 std::vector<float> Intersection::checkCollisionPoints(Connection* connection, Connection* collisionConnection)
 {
-	std::vector<float> collisionPoints;
+	std::vector<float> collisionDistances;
 	float cumulativeLength{ 0.0f };
-	for (size_t i = 0; i < connection->geometry().size() - 1; ++i)
+	const auto& connGeometry = connection->geometry();
+	const auto& collConnGeometry = collisionConnection->geometry(); 
+
+	if (connGeometry.size() < 2 || collConnGeometry.size() < 2) {
+		return collisionDistances; // Return empty if not enough points
+	}
+
+	for (size_t i = 0; i < connGeometry.size() - 1; ++i)
 	{
-		Vector2 p1 = connection->geometry()[i];
-		Vector2 p2 = connection->geometry()[i + 1];
-		for (size_t j = 0; j < collisionConnection->geometry().size() - 1; ++j)
+		Vector2 p1 = connGeometry[i];
+		Vector2 p2 = connGeometry[i + 1];
+		float segmentLength = vector2Distance(p1, p2);
+
+		if (segmentLength < 1e-5f) {
+			cumulativeLength += segmentLength;
+			continue;
+		}
+
+		for (size_t j = 0; j < collConnGeometry.size() - 1; ++j)
 		{
-			Vector2 q1 = collisionConnection->geometry()[j];
-			Vector2 q2 = collisionConnection->geometry()[j + 1];
-			
-			if (float distance = lineIntersectionCap(p1, p2, q1, q2) >= 0.0f)
+			Vector2 q1 = collConnGeometry[j];
+			Vector2 q2 = collConnGeometry[j + 1];
+
+			float t = lineIntersectionCap(p1, p2, q1, q2);
+
+			if (t >= 0.0f) // lineIntersectionCap returns t >= 0 if intersects
 			{
-				collisionPoints.push_back(cumulativeLength + distance);
+				float actualDistanceOnSegment = t * segmentLength;
+				collisionDistances.push_back(cumulativeLength + actualDistanceOnSegment);
 			}
 		}
-		cumulativeLength += vector2Distance(p1, p2);
+		cumulativeLength += segmentLength;
 	}
-	return collisionPoints;
+	return collisionDistances;
 }

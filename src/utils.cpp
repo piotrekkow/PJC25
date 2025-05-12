@@ -146,25 +146,34 @@ bool lineIntersection(Vector2 p1, Vector2 dir1, Vector2 p2, Vector2 dir2, Vector
 */
 float lineIntersectionCap(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
 {
+    const float epsilon = 1e-5f;
+
     // direction vectors
     Vector2 r{ p2 - p1 };
     Vector2 s{ q2 - q1 };
 
-    if (std::abs(det(r, s)) < 1e-5f)
+    float r_cross_s = det(r, s);
+
+    if (std::abs(r_cross_s) < epsilon)
     {
-		return -1.0f; // lines are parallel
+        // Lines are parallel or collinear.
+        return -1.0f;
     }
 
     Vector2 c = q1 - p1;
-    // distance p1 to intersection
-    float t = det(c, s) / det(r, s);
-	// distance q1 to intersection
-    float u = det(c, r) / det(r, s);
 
-    // Check if intersection is within both line segments
-    if (t >= 0.0f && t <= 1.0f && u >= 0.0f && u <= 1.0f)
+    // Parametric distance p1 to intersection along r
+    float t = det(c, s) / r_cross_s;
+    // Parametric distance q1 to intersection along s
+    float u = det(c, r) / r_cross_s;
+
+    // Check if intersection is within both line segments using epsilon tolerance
+    // Allows intersections slightly outside the strict [0, 1] range due to precision errors
+    if (t >= -epsilon && t <= (1.0f + epsilon) &&
+        u >= -epsilon && u <= (1.0f + epsilon))
     {
         return t;
     }
-    return -1.0f; // no intersection
+
+    return -1.0f; // no intersection within segment bounds
 }
