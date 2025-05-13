@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 #include <cmath>
-
+#include <raylib.h>
 
 class Link;
 class Connection;
@@ -26,7 +26,7 @@ public:
 	~Intersection();
 	void addIncomingLink(Link* link);
 	void addOutgoingLink(Link* link);
-	Connection* addConnection(Lane* inlet, Lane* outlet, float angleThreshold = 30.0f * 3.1415f / 180/*DEG2RAD*/);
+	Connection* addConnection(Lane* inlet, Lane* outlet, float angleThreshold = 30.0f * DEG2RAD);
 	const std::vector<Connection*> getConnections() const;
 	void updateCollisionPoints();
 

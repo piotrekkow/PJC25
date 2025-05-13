@@ -1,8 +1,8 @@
 #pragma once
 #include <raylib.h>
 
-constexpr int WINDOW_WIDTH{ 1920 };
-constexpr int WINDOW_HEIGHT{ 1080 };
+constexpr int WINDOW_WIDTH{ 1820 };
+constexpr int WINDOW_HEIGHT{ 980 };
 
 constexpr Color BACKGROUND_COLOR{ RAYWHITE };
 constexpr Color EDGE_COLOR{ LIGHTGRAY };

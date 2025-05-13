@@ -15,12 +15,12 @@ const Link* Lane::parent() const
 
 const Vector2 Lane::endPosition() const
 {
-	return parent_->getTargetPosition() + parent_->normal() * static_cast<float>(id_) * parent_->getLaneWidth();
+	return parent_->getTargetPosition() + parent_->normal() * (id_ + 0.5f) * parent_->getLaneWidth();
 }
 
 const Vector2 Lane::startPosition() const
 {
-	return parent_->getSourcePosition() + parent_->normal() * static_cast<float>(id_) * parent_->getLaneWidth();
+	return parent_->getSourcePosition() + parent_->normal() * (id_ + 0.5f) * parent_->getLaneWidth();
 }
 
 const float Lane::length() const {

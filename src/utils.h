@@ -23,7 +23,7 @@ float det(Vector2 v1, Vector2 v2);
 float dot(Vector2 v1, Vector2 v2);
 float vector2Angle(Vector2 v1, Vector2 v2);
 
-//Quad Bezier utilities
+// Quad Bezier utilities
 Vector2 quadBezierPoint(Vector2 start, Vector2 control, Vector2 end, float t);
 
 bool lineIntersection(Vector2 p1, Vector2 dir1, Vector2 p2, Vector2 dir2, Vector2& intersectionPoint);

@@ -11,8 +11,10 @@ Renderer::Renderer(const Network* network) : network_{ network }
 {
 }
 
-void Renderer::render()
+void Renderer::render(Camera2D& camera)
 {
+	BeginMode2D(camera);
+
 	for (auto link : network_->getLinks())
 	{
 		renderLink(link);
@@ -21,6 +23,13 @@ void Renderer::render()
 	{
 		renderIntersection(intersection);
 	}
+
+	EndMode2D();
+}
+
+void Renderer::renderPauseOverlay()
+{
+	DrawRectangleLinesEx({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT }, 10.0f, RED);
 }
 
 bool Renderer::toggleDebug()
@@ -38,13 +47,22 @@ void Renderer::renderLink(Link* link)
 	for (auto& lane : link->getLanes())
 	{
 		if (!isDebugMode_) DrawLineEx(lane->startPosition(), lane->endPosition(), link->getLaneWidth(), ROAD_COLOR);
-		else DrawLineEx(lane->startPosition(), lane->endPosition(), 2.0f, ROAD_COLOR);
+		else DrawLineEx(lane->startPosition(), lane->endPosition(), 1.0f, ROAD_COLOR);
 	}
 	if (isDebugMode_)
 	{
-		drawArrow(link->getSourcePosition(), link->getTargetPosition(), 1.0f, BLACK);
-		drawArrow(link->getTargetPosition(), link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()), 1.0f, PURPLE);
+		renderLinkBoundary(link);
 	}
+}
+
+void Renderer::renderLinkBoundary(Link* link, float boundaryLaneWidth, Color boundaryColor)
+{
+	Vector2 linkSourceOffset{ link->getSourcePosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()) };
+	Vector2 linkTargetOffset{ link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()) };
+	drawArrow(link->getSourcePosition(), link->getTargetPosition(), 0.3f, boundaryColor);
+	drawArrow(linkSourceOffset, linkTargetOffset, 0.3f, boundaryColor);
+	DrawLineEx(linkSourceOffset, link->getSourcePosition(), boundaryLaneWidth, boundaryColor);
+	DrawLineEx(linkTargetOffset, link->getTargetPosition(), boundaryLaneWidth, boundaryColor);
 }
 
 void Renderer::renderIntersection(Intersection* intersection)
@@ -55,7 +73,6 @@ void Renderer::renderIntersection(Intersection* intersection)
 			return;
 		}
 
-
 		for (auto& connection : intersection->getConnections())
 		{
 			if (connection)
@@ -65,15 +82,15 @@ void Renderer::renderIntersection(Intersection* intersection)
 				{
 					if (!isDebugMode_ && i < geometry.size())
 					{
-						DrawLineEx(geometry[i - 1], geometry[i], 13.5f, ROAD_COLOR);
+						DrawLineEx(geometry[i - 1], geometry[i], 3.5f, ROAD_COLOR);
 					}
 					else if (i < geometry.size() - 1)
 					{
-						DrawLineEx(geometry[i - 1], geometry[i], 2.0f, BLUE);
+						DrawLineEx(geometry[i - 1], geometry[i], 0.3f, BLUE);
 					}
 					else
 					{
-						drawArrow(geometry[i - 1], geometry[i], 2.0f, BLUE);
+						drawArrow(geometry[i - 1], geometry[i], 0.3f, BLUE);
 					}
 				}
 			}
@@ -89,7 +106,7 @@ void Renderer::renderIntersection(Intersection* intersection)
 						if (collisionPoint)
 						{
 							Vector2 point{ connection->positionAtDistance(collisionPoint->collisionDistance()) };
-							DrawCircleV(point, 3.0f, RED);
+							DrawCircleV(point, 0.5f, RED);
 						}
 					}
 				}
@@ -121,8 +138,6 @@ void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color colo
 	leftWing = -arrowSize * leftWing;
 	rightWing = -arrowSize * rightWing;
 
-	Vector2 arrowBase = end - direction * VERTEX_RADIUS;
-
-	DrawLineEx(arrowBase, arrowBase + leftWing, lineWidth, color);
-	DrawLineEx(arrowBase, arrowBase + rightWing, lineWidth, color);
+	DrawLineEx(end, end + leftWing, lineWidth, color);
+	DrawLineEx(end, end + rightWing, lineWidth, color);
 }

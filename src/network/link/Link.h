@@ -18,7 +18,7 @@ class Link
 	Intersection* sourceIntersection_;
 	Intersection* targetIntersection_;
 	float speedLimit_{ 13.8f }; // meters per second
-	float laneWidth_{ 13.5f }; // meters
+	float laneWidth_{ 3.5f }; // meters
 
 public:
 	Link(Vector2 sourcePosition, Intersection* sourceIntersection, Vector2 targetPosition, Intersection* targetIntersection);

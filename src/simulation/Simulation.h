@@ -1,6 +1,7 @@
 #pragma once
 #include "Network.h"
 #include "Renderer.h"
+#include "InputHandler.h"
 
 class Simulation
 {
@@ -13,6 +14,8 @@ class Simulation
 
 	std::unique_ptr<Network> network_;
 	std::unique_ptr<Renderer> renderer_;
+	std::unique_ptr<InputHandler> inputHandler_;
+	Camera2D camera_;
 
 public:
 	Simulation(bool isPaused = false, float simulationSpeed = 1.0f);
@@ -34,7 +37,8 @@ public:
 	void render();
 	void shutdown();
 
-	void pause();
-	void unpause();
+private:
+	void processCameraControls();
+	void processGeneralInputs();
 };
 
