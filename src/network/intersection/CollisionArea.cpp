@@ -1,21 +1,18 @@
 #include "CollisionArea.h"
 
-CollisionArea::CollisionArea(Connection* thisConnection, Connection* collidingConnection, float collisionDistance, std::optional<TrafficPriority> priority)
+CollisionArea::CollisionArea(Connection* thisConnection, Connection* collidingConnection, float collisionDistance)
 	: thisConnection_{ thisConnection }
 	, collidingConnection_{ collidingConnection }
 	, collisionDistance_{ collisionDistance }
 {
-	if (priority.has_value())
-	{
-		priority_ = priority.value();
-	}
-	else
-	{
-		priority_ = TrafficPriority::STOP;
-	}
 }
 
 const float CollisionArea::collisionDistance() const
 {
 	return collisionDistance_;
+}
+
+int CollisionArea::priorityDifference() const
+{
+	return static_cast<int>(thisConnection_->priority()) - static_cast<int>(collidingConnection_->priority());
 }

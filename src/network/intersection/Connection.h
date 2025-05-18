@@ -4,11 +4,16 @@
 #include "CollisionArea.h"
 #include <vector>
 #include <memory>
-#include <optional>
 
 class Lane;
 class CollisionArea;
-enum class TrafficPriority;
+
+enum class TrafficPriority
+{
+	STOP,
+	YIELD,
+	PRIORITY
+};
 
 class Connection :
 	public Segment
@@ -17,6 +22,7 @@ protected:
 	Lane* previousLane_;
 	Lane* nextLane_;
 	std::vector<std::unique_ptr<CollisionArea>> collisionAreas_;
+	TrafficPriority priority_;
 
 public:
 	Connection(Lane* inletLane, Lane* outletLane);
@@ -27,10 +33,14 @@ public:
 
 	virtual Vector2 positionAtDistance(float distance) const = 0;
 	virtual Vector2 tangentAtDistance(float distance) const = 0;
+	virtual const std::vector<Vector2> geometry() const = 0;
+
 	const Vector2 startPosition() const override;
 	const Vector2 endPosition() const override;
-	virtual const std::vector<Vector2> geometry() const = 0;
-	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance, std::optional<TrafficPriority> priority = std::nullopt);
+	
+	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance);
 	const std::vector<CollisionArea*> getCollisionAreas() const;
+
+	TrafficPriority priority() const;
 };
 

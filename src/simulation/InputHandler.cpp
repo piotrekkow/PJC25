@@ -4,20 +4,17 @@
 
 InputHandler::InputHandler()
 {
-    // Initialization if needed in the future
+    // placeholder
 }
 
 void InputHandler::beginFrame()
 {
-    // This is where you might update states if you were tracking them manually
-    // For example, resetting lists of keys pressed/released this specific frame.
-    // Raylib's IsKeyPressed/Released already handle this "event" nature.
+    // placeholder
 }
 
-// --- Keyboard Input ---
 bool InputHandler::isKeyPressed(int key) const
 {
-    return ::IsKeyPressed(key); // Use :: to ensure global scope for Raylib functions
+    return ::IsKeyPressed(key);
 }
 
 bool InputHandler::isKeyDown(int key) const
@@ -30,7 +27,6 @@ bool InputHandler::isKeyReleased(int key) const
     return ::IsKeyReleased(key);
 }
 
-// --- Mouse Input ---
 bool InputHandler::isMouseButtonPressed(int button) const
 {
     return ::IsMouseButtonPressed(button);

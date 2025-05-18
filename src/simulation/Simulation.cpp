@@ -5,6 +5,7 @@
 Simulation::Simulation(bool isPaused, float simulationSpeed)
 	: simulationSpeed_{ simulationSpeed }
 	, isPaused_{ isPaused }
+	, camera_{ 0 }
 {
 }
 
@@ -20,7 +21,7 @@ void Simulation::initialize()
 	network_ = std::make_unique<Network>();
 	renderer_ = std::make_unique<Renderer>(network_.get());
 	inputHandler_ = std::make_unique<InputHandler>();
-	camera_.target = { 0.0f, 0.0f};
+	camera_.target = { 0.0f, 0.0f };
 	camera_.zoom = 20.0f;
 
 	renderer_->toggleDebug();
