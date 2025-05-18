@@ -6,8 +6,9 @@
 #include <string>
 #include <iostream>
 
-
-Renderer::Renderer(const Network* network) : network_{ network }
+Renderer::Renderer(const Network* network, const AgentManager* agentManager) 
+	: network_{ network }
+	, agentManager_{ agentManager }
 {
 }
 
@@ -22,6 +23,10 @@ void Renderer::render(Camera2D& camera)
 	for (auto intersection : network_->getIntersections())
 	{
 		renderIntersection(intersection);
+	}
+	for (auto vehicle : agentManager_->getVehicles())
+	{
+		renderVehicle(vehicle);
 	}
 
 	EndMode2D();
@@ -38,7 +43,7 @@ bool Renderer::toggleDebug()
 	return isDebugMode_;
 }
 
-void Renderer::renderLink(Link* link)
+void Renderer::renderLink(Link* link) const
 {
     if (!link) {
         std::cerr << "Tried to render a link which doesn't exist.\n";
@@ -55,7 +60,7 @@ void Renderer::renderLink(Link* link)
 	}
 }
 
-void Renderer::renderLinkBoundary(Link* link, float boundaryLaneWidth, Color boundaryColor)
+void Renderer::renderLinkBoundary(Link* link, float boundaryLaneWidth, Color boundaryColor) const
 {
 	Vector2 linkSourceOffset{ link->getSourcePosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()) };
 	Vector2 linkTargetOffset{ link->getTargetPosition() + link->normal() * link->getLaneWidth() * static_cast<float>(link->getLanes().size()) };
@@ -65,7 +70,7 @@ void Renderer::renderLinkBoundary(Link* link, float boundaryLaneWidth, Color bou
 	DrawLineEx(linkTargetOffset, link->getTargetPosition(), boundaryLaneWidth, boundaryColor);
 }
 
-void Renderer::renderIntersection(Intersection* intersection)
+void Renderer::renderIntersection(Intersection* intersection) const
 {
 	if (intersection) {
 		if (intersection->getConnections().empty())
@@ -116,7 +121,7 @@ void Renderer::renderIntersection(Intersection* intersection)
 	else std::cerr << "Tried to render an intersection which doesn't exist.\n";
 }
 
-void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color)
+void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color) const
 {
 	DrawLineEx(start, end, lineWidth, color);
 
@@ -140,4 +145,30 @@ void Renderer::drawArrow(Vector2 start, Vector2 end, float lineWidth, Color colo
 
 	DrawLineEx(end, end + leftWing, lineWidth, color);
 	DrawLineEx(end, end + rightWing, lineWidth, color);
+}
+
+
+void Renderer::renderVehicle(const Vehicle* vehicle) const
+{
+	if (!vehicle) return;
+	
+	Vector2 pos = vehicle->getPosition();
+	Vector2 dir = vehicle->getDirection(); // Assuming this is normalized
+	float length = vehicle->getLength();
+	float width = vehicle->getWidth();
+	Color color = vehicle->getColor();
+	
+	Vector2 normal = { -dir.y, dir.x }; // Perpendicular to direction
+	
+	// Define vehicle corners relative to its center (pos)
+	Vector2 halfLengthVec = dir * (length / 2.0f);
+	Vector2 halfWidthVec = normal * (width / 2.0f);
+	
+	Vector2 p1 = pos + halfLengthVec + halfWidthVec; // Front-right (or front-left depending on normal)
+	Vector2 p2 = pos - halfLengthVec + halfWidthVec; // Rear-right
+	Vector2 p3 = pos - halfLengthVec - halfWidthVec; // Rear-left
+	Vector2 p4 = pos + halfLengthVec - halfWidthVec; // Front-left
+	
+	DrawTriangle(p1, p4, pos, Fade(color, 0.7f)); // Front part to indicate direction
+	DrawRectanglePro({ pos.x, pos.y, length, width }, { length / 2.0f, width / 2.0f }, atan2f(dir.y, dir.x) * RAD2DEG, color);
 }

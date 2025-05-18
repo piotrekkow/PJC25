@@ -19,7 +19,8 @@ void Simulation::initialize()
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	SetTargetFPS(60);
 	network_ = std::make_unique<Network>();
-	renderer_ = std::make_unique<Renderer>(network_.get());
+	agentManager_ = std::make_unique<AgentManager>();
+	renderer_ = std::make_unique<Renderer>(network_.get(), agentManager_.get());
 	inputHandler_ = std::make_unique<InputHandler>();
 	camera_.target = { 0.0f, 0.0f };
 	camera_.zoom = 20.0f;
@@ -73,6 +74,20 @@ void Simulation::initialize()
 	i->addConnection(nlin->getLanes()[0], elout->getLanes()[0]);
 
 	i->updateCollisionPoints();
+
+	// --- Spawn initial vehicles ---
+	// Ensure lanes exist before trying to add vehicles to them.
+	// Example: Add a vehicle to the first lane of 'elin' if it exists.
+	if (elin && !elin->getLanes().empty()) {
+		Lane * startLane = elin->getLanes()[0];
+		if (startLane) {
+			agentManager_->addVehicle(startLane);
+		}
+	}
+	if (wlin && wlin->getLanes().size() > 1) {
+		Lane * startLane2 = wlin->getLanes()[1];
+		if (startLane2) agentManager_->addVehicle(startLane2);
+	}
 }
 
 void Simulation::run()
@@ -93,7 +108,8 @@ void Simulation::update()
 {
 	float deltaTime{ GetFrameTime() * simulationSpeed_ };
 	totalTime_ += deltaTime;
-	// update vehicles here in the future
+	
+	agentManager_->update(deltaTime, network_.get());
 }
 
 void Simulation::render()
