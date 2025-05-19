@@ -2,8 +2,8 @@
 #include "utils.h"
 #include <iostream>
 
-ConnectionCurved::ConnectionCurved(Lane* inletLane, Lane* outletLane, Vector2 controlPoint)
-	: Connection(inletLane, outletLane)
+ConnectionCurved::ConnectionCurved(Lane* inletLane, Lane* outletLane, TrafficPriority priority, Vector2 controlPoint)
+	: Connection(inletLane, outletLane, priority)
 	, controlPoint_{ controlPoint }
 	, totalLength_{ 0.0f }
 {

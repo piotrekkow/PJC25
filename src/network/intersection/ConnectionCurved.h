@@ -15,7 +15,7 @@ class ConnectionCurved :
     float totalLength_;
 
 public:
-    ConnectionCurved(Lane* inletLane, Lane* outletLane, Vector2 controlPoint);
+    ConnectionCurved(Lane* inletLane, Lane* outletLane, TrafficPriority priority, Vector2 controlPoint);
     ~ConnectionCurved() override = default;
     
     Vector2 positionAtDistance(float distance) const override;

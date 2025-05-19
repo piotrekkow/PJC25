@@ -2,9 +2,10 @@
 #include "utils.h"
 #include <iostream>
 
-Connection::Connection(Lane* inletLane, Lane* outletLane)
+Connection::Connection(Lane* inletLane, Lane* outletLane, TrafficPriority priority)
 	: previousLane_{ inletLane }
 	, nextLane_{ outletLane }
+	, priority_{ priority }
 {
 	if (!previousLane_)
 	{
@@ -33,12 +34,26 @@ CollisionArea* Connection::addCollisionArea(Connection* collidingConnection, flo
 	return collisionAreas_.back().get();
 }
 
-const std::vector<CollisionArea*> Connection::getCollisionAreas() const
+const std::vector<const CollisionArea*> Connection::getCollisionAreas() const
 {
-	std::vector<CollisionArea*> collisionAreas;
+	std::vector<const CollisionArea*> collisionAreas;
 	for (auto& collisionArea : collisionAreas_)
 	{
 		collisionAreas.emplace_back(collisionArea.get());
+	}
+	return collisionAreas;
+}
+
+const std::vector<const CollisionArea*> Connection::getCollisionAreas(float distanceThreshold) const
+{
+	std::vector<const CollisionArea*> collisionAreas;
+	for (auto& collisionArea : collisionAreas_)
+	{
+		auto ca{ collisionArea.get() };
+		if (ca->getCollisionDistance() >= distanceThreshold)
+		{
+			collisionAreas.emplace_back(ca);
+		}
 	}
 	return collisionAreas;
 }

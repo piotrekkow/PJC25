@@ -10,6 +10,7 @@
 class Link;
 class Connection;
 class Lane;
+enum class TrafficPriority;
 
 /**
 * @brief Road intersection between links
@@ -26,7 +27,7 @@ public:
 	~Intersection();
 	void addIncomingLink(Link* link);
 	void addOutgoingLink(Link* link);
-	Connection* addConnection(Lane* inlet, Lane* outlet, float angleThreshold = 30.0f * DEG2RAD);
+	Connection* addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority, float angleThreshold = 30.0f * DEG2RAD);
 	const std::vector<const Connection*> getConnections() const;
 	void updateCollisionPoints();
 

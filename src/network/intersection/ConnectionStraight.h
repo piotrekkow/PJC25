@@ -8,7 +8,7 @@ class ConnectionStraight :
     public Connection
 {
 public:
-	ConnectionStraight(Lane* inletLane, Lane* outletLane);
+	ConnectionStraight(Lane* inletLane, Lane* outletLane, TrafficPriority priority);
 	~ConnectionStraight() override = default;
 
 	const float length() const override;

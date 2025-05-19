@@ -17,7 +17,7 @@ void Intersection::addOutgoingLink(Link* link)
 	outgoingLinks_.emplace_back(link);
 }
 
-Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, float angleThreshold)
+Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority, float angleThreshold)
 {
 	float turnAngle{ vector2Angle(inlet->tangentAtDistance(0.0f), outlet->tangentAtDistance(0.0f)) };
 	if (std::abs(turnAngle) > angleThreshold && vector2Distance(inlet->endPosition(), outlet->startPosition()) > 1.0f)
@@ -27,7 +27,7 @@ Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, float angleTh
 		
 		if (tangentsIntersect)
 		{
-			connections_.emplace_back(std::make_unique<ConnectionCurved>(inlet, outlet, controlPoint));
+			connections_.emplace_back(std::make_unique<ConnectionCurved>(inlet, outlet, priority, controlPoint));
 
 			Connection* addedConnection{ connections_.back().get() };
 			inlet->addNextConnection(addedConnection);
@@ -35,7 +35,7 @@ Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, float angleTh
 		}
 	}
 
-	connections_.emplace_back(std::make_unique<ConnectionStraight>(inlet, outlet));
+	connections_.emplace_back(std::make_unique<ConnectionStraight>(inlet, outlet, priority));
 
 	Connection* addedConnection{ connections_.back().get() };
 	inlet->addNextConnection(addedConnection);

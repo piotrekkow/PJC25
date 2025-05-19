@@ -29,9 +29,6 @@ void Vehicle::update(float deltaTime, [[maybe_unused]] const Network* network)
     updatePosition(deltaTime, network);
 }
 
-// This is a placeholder for choosing the next segment.
-// Realistic behavior requires access to Network, Intersection connections,
-// and possibly a destination or route for the vehicle.
 void Vehicle::chooseNextSegment([[maybe_unused]] const Network* network)
 {
 	Connection* conn = dynamic_cast<Connection*>(currentSegment_);
@@ -93,6 +90,18 @@ void Vehicle::updatePosition(float deltaTime, const Network* network)
         float overshootDistance = distanceOnSegment_ - segmentLength;
         chooseNextSegment(network);
 		distanceOnSegment_ = overshootDistance;
+    }
+}
+
+void Vehicle::evaluate()
+{
+    switch (state_)
+    {
+        case VehicleState::PROCEEDING:
+            break;
+        case VehicleState::APPROACHING_YIELD:
+            auto conn{ dynamic_cast<const Connection*>(currentSegment_) };
+            auto collisionAreas{ conn->getCollisionAreas() };
     }
 }
 

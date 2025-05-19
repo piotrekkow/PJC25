@@ -2,6 +2,8 @@
 #include "config.h"
 #include "utils.h"
 
+#include "Connection.h" // traffic priority (temporary)
+
 Simulation::Simulation(bool isPaused, float simulationSpeed)
 	: simulationSpeed_{ simulationSpeed }
 	, isPaused_{ isPaused }
@@ -53,25 +55,25 @@ void Simulation::initialize()
 	auto slout = network_->addLink({ -1, pos1 }, { -1, len1 }, i, is);
 	slout->addLane();
 
-	i->addConnection(elin->getLanes()[0], slout->getLanes()[0]);
-	i->addConnection(elin->getLanes()[1], wlout->getLanes()[0]);
-	i->addConnection(elin->getLanes()[2], wlout->getLanes()[1]);
-	i->addConnection(elin->getLanes()[2], nlout->getLanes()[0]);
+	i->addConnection(elin->getLanes()[0], slout->getLanes()[0], TrafficPriority::YIELD);
+	i->addConnection(elin->getLanes()[1], wlout->getLanes()[0], TrafficPriority::PRIORITY);
+	i->addConnection(elin->getLanes()[2], wlout->getLanes()[1], TrafficPriority::PRIORITY);
+	i->addConnection(elin->getLanes()[2], nlout->getLanes()[0], TrafficPriority::YIELD);
 
-	i->addConnection(wlin->getLanes()[0], nlout->getLanes()[0]);
-	i->addConnection(wlin->getLanes()[1], elout->getLanes()[0]);
-	i->addConnection(wlin->getLanes()[2], elout->getLanes()[1]);
-	i->addConnection(wlin->getLanes()[2], slout->getLanes()[1]);
+	i->addConnection(wlin->getLanes()[0], nlout->getLanes()[0], TrafficPriority::YIELD);
+	i->addConnection(wlin->getLanes()[1], elout->getLanes()[0], TrafficPriority::PRIORITY);
+	i->addConnection(wlin->getLanes()[2], elout->getLanes()[1], TrafficPriority::PRIORITY);
+	i->addConnection(wlin->getLanes()[2], slout->getLanes()[1], TrafficPriority::YIELD);
 
-	i->addConnection(slin->getLanes()[0], wlout->getLanes()[0]);
-	i->addConnection(slin->getLanes()[0], wlout->getLanes()[1]);
-	i->addConnection(slin->getLanes()[1], nlout->getLanes()[0]);
-	i->addConnection(slin->getLanes()[2], elout->getLanes()[1]);
+	i->addConnection(slin->getLanes()[0], wlout->getLanes()[0], TrafficPriority::YIELD);
+	i->addConnection(slin->getLanes()[0], wlout->getLanes()[1], TrafficPriority::YIELD);
+	i->addConnection(slin->getLanes()[1], nlout->getLanes()[0], TrafficPriority::YIELD);
+	i->addConnection(slin->getLanes()[2], elout->getLanes()[1], TrafficPriority::YIELD);
 
-	i->addConnection(nlin->getLanes()[1], wlout->getLanes()[1]);
-	i->addConnection(nlin->getLanes()[1], slout->getLanes()[1]);
-	i->addConnection(nlin->getLanes()[0], slout->getLanes()[0]);
-	i->addConnection(nlin->getLanes()[0], elout->getLanes()[0]);
+	i->addConnection(nlin->getLanes()[1], wlout->getLanes()[1], TrafficPriority::YIELD);
+	i->addConnection(nlin->getLanes()[1], slout->getLanes()[1], TrafficPriority::YIELD);
+	i->addConnection(nlin->getLanes()[0], slout->getLanes()[0], TrafficPriority::YIELD);
+	i->addConnection(nlin->getLanes()[0], elout->getLanes()[0], TrafficPriority::YIELD);
 
 	i->updateCollisionPoints();
 

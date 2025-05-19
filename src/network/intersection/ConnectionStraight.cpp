@@ -1,8 +1,8 @@
 #include "ConnectionStraight.h"
 #include "utils.h"
 
-ConnectionStraight::ConnectionStraight(Lane* inletLane, Lane* outletLane)
-	: Connection(inletLane, outletLane)
+ConnectionStraight::ConnectionStraight(Lane* inletLane, Lane* outletLane, TrafficPriority priority)
+	: Connection(inletLane, outletLane, priority)
 {
 }
 

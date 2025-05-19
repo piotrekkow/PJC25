@@ -25,7 +25,7 @@ protected:
 	TrafficPriority priority_;
 
 public:
-	Connection(Lane* inletLane, Lane* outletLane);
+	Connection(Lane* inletLane, Lane* outletLane, TrafficPriority priority);
 	~Connection() override = default;
 
 	virtual Vector2 positionAtDistance(float distance) const = 0;
@@ -36,7 +36,9 @@ public:
 	const Vector2 endPosition() const override;
 	
 	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance);
-	const std::vector<CollisionArea*> getCollisionAreas() const;
+	const std::vector<const CollisionArea*> getCollisionAreas() const;
+	/** @brief Get collision areas past some distance threshold */
+	const std::vector<const CollisionArea*> getCollisionAreas(float distanceThreshold) const;
 
 	const Lane* previousLane() const { return previousLane_; }
 	const Lane* nextLane() const { return nextLane_; }
