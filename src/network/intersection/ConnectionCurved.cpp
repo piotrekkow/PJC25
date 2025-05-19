@@ -10,11 +10,6 @@ ConnectionCurved::ConnectionCurved(Lane* inletLane, Lane* outletLane, Vector2 co
 	calculatePath(10);
 }
 
-const float ConnectionCurved::length() const
-{
-	return totalLength_;
-}
-
 Vector2 ConnectionCurved::positionAtDistance(float distance) const
 {
 	if (totalLength_ < 0.01f) return startPosition();
@@ -48,11 +43,6 @@ Vector2 ConnectionCurved::tangentAtDistance(float distance) const
 	Vector2 segmentEndPoint{ pathPoints_[index] };
 
 	return normalizedTangent(segmentStartPoint, segmentEndPoint);
-}
-
-const std::vector<Vector2> ConnectionCurved::geometry() const
-{
-	return pathPoints_;
 }
 
 void ConnectionCurved::calculatePath(int numberOfSegments)

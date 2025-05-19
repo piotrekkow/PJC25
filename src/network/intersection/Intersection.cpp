@@ -42,9 +42,9 @@ Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, float angleTh
 	return connections_.back().get();
 }
 
-const std::vector<Connection*> Intersection::getConnections() const
+const std::vector<const Connection*> Intersection::getConnections() const
 {
-	std::vector<Connection*> connections;
+	std::vector<const Connection*> connections;
 	for (auto& connection : connections_)
 	{
 		connections.emplace_back(connection.get());

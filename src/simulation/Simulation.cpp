@@ -75,17 +75,14 @@ void Simulation::initialize()
 
 	i->updateCollisionPoints();
 
-	// --- Spawn initial vehicles ---
-	// Ensure lanes exist before trying to add vehicles to them.
-	// Example: Add a vehicle to the first lane of 'elin' if it exists.
 	if (elin && !elin->getLanes().empty()) {
-		Lane * startLane = elin->getLanes()[0];
+		Lane* startLane = elin->getLanes()[0];
 		if (startLane) {
 			agentManager_->addVehicle(startLane);
 		}
 	}
 	if (wlin && wlin->getLanes().size() > 1) {
-		Lane * startLane2 = wlin->getLanes()[1];
+		Lane* startLane2 = wlin->getLanes()[1];
 		if (startLane2) agentManager_->addVehicle(startLane2);
 	}
 }

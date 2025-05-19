@@ -17,11 +17,12 @@ class ConnectionCurved :
 public:
     ConnectionCurved(Lane* inletLane, Lane* outletLane, Vector2 controlPoint);
     ~ConnectionCurved() override = default;
-
-    const float length() const override;
+    
     Vector2 positionAtDistance(float distance) const override;
     Vector2 tangentAtDistance(float distance) const override;
-    const std::vector<Vector2> geometry() const;
+
+    const float length() const override { return totalLength_; }
+    const std::vector<Vector2> geometry() const { return pathPoints_; }
 
 private:
     void calculatePath(int numberOfSegments);

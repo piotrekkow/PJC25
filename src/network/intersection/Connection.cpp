@@ -16,16 +16,6 @@ Connection::Connection(Lane* inletLane, Lane* outletLane)
 	}
 }
 
-const Lane* Connection::previousLane() const
-{
-	return previousLane_;
-}
-
-const Lane* Connection::nextLane() const
-{
-	return nextLane_;
-}
-
 const Vector2 Connection::startPosition() const
 {
 	return previousLane()->endPosition();
@@ -51,9 +41,4 @@ const std::vector<CollisionArea*> Connection::getCollisionAreas() const
 		collisionAreas.emplace_back(collisionArea.get());
 	}
 	return collisionAreas;
-}
-
-TrafficPriority Connection::priority() const
-{
-	return priority_;
 }

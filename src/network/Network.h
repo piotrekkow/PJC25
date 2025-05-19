@@ -12,10 +12,11 @@ class Network
 
 public:
 	Network();
+	// make addIntersection and addLink private in the future and have some interface for adding roads
 	Intersection* addIntersection();
 	Link* addLink(Vector2 sourcePosition, Vector2 targetPosition, Intersection* sourceIntersection, Intersection* targetIntersection);
-	const std::vector<Link*> getLinks() const;
-	const std::vector<Intersection*> getIntersections() const;
+	const std::vector<const Link*> getLinks() const;
+	const std::vector<const Intersection*> getIntersections() const;
 };
 
 

@@ -16,13 +16,18 @@ public:
 	void renderPauseOverlay();
 	bool toggleDebug();
 
-	
-
 private:
-	void renderLink(Link* link) const;
-	void renderLinkBoundary(Link* link, float boundaryLaneWidth = 0.3f, Color boundaryColor = ORANGE) const;
-	void renderIntersection(Intersection* intersection) const;
+	void renderNetwork() const;
+	void renderAgents() const;
+	void renderLink(const Link* link) const;
+	void renderLinkBoundary(const Link* link, float boundaryLaneWidth = 0.3f, Color boundaryColor = ORANGE) const;
+	void renderIntersection(const Intersection* intersection) const;
+	void renderConnection(const Connection* connection) const;
 	void renderVehicle(const Vehicle* vehicle) const;
 	void drawArrow(Vector2 start, Vector2 end, float lineWidth, Color color) const;
-};
 
+	void renderLinkDebug(const Link* link) const;
+	void renderIntersectionDebug(const Intersection* intersection) const;
+	void renderConnectionDebug(const Connection* connection) const;
+	void renderCollisionsDebug(const Connection* connection) const;
+};

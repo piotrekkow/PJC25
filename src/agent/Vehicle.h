@@ -12,12 +12,12 @@ class Vehicle
 {
     Segment* currentSegment_;
     Segment* initialSegment_;
-    float distanceOnSegment_;
-    float currentSpeed_;      // m/s
-    float targetSpeed_;       // m/s
-    float acceleration_;      // m/s^2
-    float length_;            // meters
-    float width_;             // meters
+    float distanceOnSegment_;   // m
+    float currentSpeed_;        // m/s
+    float targetSpeed_;         // m/s
+    float acceleration_;        // m/s^2
+    float length_;              // m
+    float width_;               // m
     Color color_;
 
 public:

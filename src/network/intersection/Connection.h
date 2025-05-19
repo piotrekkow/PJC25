@@ -28,9 +28,6 @@ public:
 	Connection(Lane* inletLane, Lane* outletLane);
 	~Connection() override = default;
 
-	const Lane* previousLane() const;
-	const Lane* nextLane() const;
-
 	virtual Vector2 positionAtDistance(float distance) const = 0;
 	virtual Vector2 tangentAtDistance(float distance) const = 0;
 	virtual const std::vector<Vector2> geometry() const = 0;
@@ -41,6 +38,8 @@ public:
 	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance);
 	const std::vector<CollisionArea*> getCollisionAreas() const;
 
-	TrafficPriority priority() const;
+	const Lane* previousLane() const { return previousLane_; }
+	const Lane* nextLane() const { return nextLane_; }
+	TrafficPriority getPriority() const { return priority_; }
 };
 

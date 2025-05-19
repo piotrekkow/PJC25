@@ -1,9 +1,8 @@
-// src/vehicle/Vehicle.cpp
 #include "Vehicle.h"
-#include "Network.h" // Required for chooseNextSegment (if complex)
-#include "Renderer.h" // For drawing (if Vehicle::draw is used directly)
-#include "utils.h" // For vector operations
-#include <iostream> // For debugging
+#include "Network.h"
+#include "Renderer.h"
+#include "utils.h"
+#include <iostream>
 
 Vehicle::Vehicle(Segment* initialSegment, float initialSpeed, Color color)
     : currentSegment_{ initialSegment }
@@ -46,7 +45,7 @@ void Vehicle::chooseNextSegment([[maybe_unused]] const Network* network)
     {
         if (!lane->getNextConnections().empty())
         {
-            currentSegment_ = const_cast<Connection*>(lane->getNextConnections()[0]);
+            currentSegment_ = lane->getNextConnections()[0];
         }
         else
         {

@@ -1,4 +1,3 @@
-// src/input/InputHandler.cpp
 #include "InputHandler.h"
 #include <iostream>
 

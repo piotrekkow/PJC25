@@ -24,7 +24,6 @@ public:
 	Simulation(bool isPaused = false, float simulationSpeed = 1.0f);
 	~Simulation();
 
-	// Deleted copy and move constructors/assignments
 	Simulation(const Simulation&) = delete;
 	Simulation& operator=(const Simulation&) = delete;
 	Simulation(Simulation&&) = delete;

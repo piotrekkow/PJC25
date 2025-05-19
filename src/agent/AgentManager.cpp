@@ -8,9 +8,9 @@ void AgentManager::update(float deltaTime, Network* network)
 	}
 }
 
-const std::vector<Vehicle*> AgentManager::getVehicles() const
+const std::vector<const Vehicle*> AgentManager::getVehicles() const
 {
-	std::vector<Vehicle*> vehicles;
+	std::vector<const Vehicle*> vehicles;
 	for (auto& vehicle : vehicles_)
 	{
 		vehicles.emplace_back(vehicle.get());

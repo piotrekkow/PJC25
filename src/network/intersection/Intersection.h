@@ -27,7 +27,7 @@ public:
 	void addIncomingLink(Link* link);
 	void addOutgoingLink(Link* link);
 	Connection* addConnection(Lane* inlet, Lane* outlet, float angleThreshold = 30.0f * DEG2RAD);
-	const std::vector<Connection*> getConnections() const;
+	const std::vector<const Connection*> getConnections() const;
 	void updateCollisionPoints();
 
 private:

@@ -9,6 +9,6 @@ class AgentManager
 
 public:  
 	void update(float deltaTime, Network* network);
-	const std::vector<Vehicle*> getVehicles() const;  
+	const std::vector<const Vehicle*> getVehicles() const;  
 	Vehicle* addVehicle(Segment* initialSegment);
 };

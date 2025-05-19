@@ -7,12 +7,7 @@ CollisionArea::CollisionArea(Connection* thisConnection, Connection* collidingCo
 {
 }
 
-const float CollisionArea::collisionDistance() const
-{
-	return collisionDistance_;
-}
-
 int CollisionArea::priorityDifference() const
 {
-	return static_cast<int>(thisConnection_->priority()) - static_cast<int>(collidingConnection_->priority());
+	return static_cast<int>(thisConnection_->getPriority()) - static_cast<int>(collidingConnection_->getPriority());
 }

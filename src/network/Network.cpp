@@ -16,9 +16,9 @@ Link* Network::addLink(Vector2 sourcePosition, Vector2 targetPosition, Intersect
 	return links_.back().get();
 }
 
-const std::vector<Link*> Network::getLinks() const
+const std::vector<const Link*> Network::getLinks() const
 {
-	std::vector<Link*> links;
+	std::vector<const Link*> links;
 	for (auto& link : links_)
 	{
 		links.emplace_back(link.get());
@@ -26,9 +26,9 @@ const std::vector<Link*> Network::getLinks() const
 	return links;
 }
 
-const std::vector<Intersection*> Network::getIntersections() const
+const std::vector<const Intersection*> Network::getIntersections() const
 {
-	std::vector<Intersection*> intersections;
+	std::vector<const Intersection*> intersections;
 	for (auto& intersection : intersections_)
 	{
 		intersections.emplace_back(intersection.get());
