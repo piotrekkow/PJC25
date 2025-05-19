@@ -11,6 +11,7 @@ class Network;
 class Vehicle
 {
     Segment* currentSegment_;
+    Segment* initialSegment_;
     float distanceOnSegment_;
     float currentSpeed_;      // m/s
     float targetSpeed_;       // m/s
@@ -20,7 +21,7 @@ class Vehicle
     Color color_;
 
 public:
-    Vehicle(Segment* initialSegment, float initialSpeed = 10.0f, Color color = BLUE);
+    Vehicle(Segment* initialSegment, float initialSpeed = 10.0f, Color color = GREEN);
 
     void update(float deltaTime, const Network* network);
 
@@ -32,4 +33,6 @@ public:
 
 private:
     void chooseNextSegment(const Network* network);
+    void updateSpeed(float deltaTime);
+	void updatePosition(float deltaTime, const Network* network);
 };

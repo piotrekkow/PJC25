@@ -38,9 +38,15 @@ Vector2 Lane::tangentAtDistance([[maybe_unused]] float distance) const {
     return vector2Normalize(tangent);
 }
 
+void Lane::addNextConnection(Connection* connection)
+{
+	nextConnections_.push_back(connection);
+}
+
 Vector2 Lane::positionAtDistance(float distance) const {
     float clampedDistance = std::max(0.0f, std::min(distance, length()));
-    if (length() < 1e-3f) {
+    if (length() < 1e-3f) 
+    {
         return startPosition();
     }
     return startPosition() + tangentAtDistance(0.0f) * clampedDistance;

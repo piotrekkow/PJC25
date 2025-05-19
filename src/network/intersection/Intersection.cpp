@@ -28,13 +28,18 @@ Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, float angleTh
 		if (tangentsIntersect)
 		{
 			connections_.emplace_back(std::make_unique<ConnectionCurved>(inlet, outlet, controlPoint));
+
+			Connection* addedConnection{ connections_.back().get() };
+			inlet->addNextConnection(addedConnection);
 			return connections_.back().get();
 		}
 	}
 
 	connections_.emplace_back(std::make_unique<ConnectionStraight>(inlet, outlet));
+
+	Connection* addedConnection{ connections_.back().get() };
+	inlet->addNextConnection(addedConnection);
 	return connections_.back().get();
-	
 }
 
 const std::vector<Connection*> Intersection::getConnections() const
