@@ -1,8 +1,10 @@
 #include "Vehicle.h"
 #include "Network.h"
 #include "Renderer.h"
+#include "AgentManager.h"
 #include "utils.h"
 #include <iostream>
+#include <algorithm>
 
 Vehicle::Vehicle(Segment* initialSegment, float initialSpeed, Color color)
     : currentSegment_{ initialSegment }
@@ -14,6 +16,7 @@ Vehicle::Vehicle(Segment* initialSegment, float initialSpeed, Color color)
     , length_{ 4.5f }
     , width_{ 1.8f }
     , color_{ color }
+	, isWaitingAtJunction_{ false }
 {
     if (!currentSegment_)
     {
@@ -21,15 +24,23 @@ Vehicle::Vehicle(Segment* initialSegment, float initialSpeed, Color color)
     }
 }
 
-void Vehicle::update(float deltaTime, [[maybe_unused]] const Network* network)
-{
-    if (!currentSegment_) return;
 
+/*
+* 1. Check if the vehicle is on a connection or lane
+* 2. Check ahead set distance based on speed
+* 3. Gather the set of next lanes and connections within the distance calculated earlier
+* 4. Based on the above gather the set of collision areas
+* 5. Check collision areas upstream a set distance which would be enough for the vehicle to leave the collision area in time
+* 6. If the next collision areas are close to each other and there is not enough space to stop if needed stop before the first one
+*/
+
+void Vehicle::update(float deltaTime, [[maybe_unused]] const Network* network, [[maybe_unused]] const AgentManager* agentManager)
+{
     updateSpeed(deltaTime);
-    updatePosition(deltaTime, network);
+    updatePosition(deltaTime);
 }
 
-void Vehicle::chooseNextSegment([[maybe_unused]] const Network* network)
+void Vehicle::chooseNextSegment()
 {
 	Connection* conn = dynamic_cast<Connection*>(currentSegment_);
 	Lane* lane = dynamic_cast<Lane*>(currentSegment_);
@@ -71,14 +82,15 @@ void Vehicle::updateSpeed(float deltaTime)
     else if (currentSpeed_ > targetSpeed_)
     {
         currentSpeed_ -= acceleration_ * deltaTime;
-        if (currentSpeed_ < 0)
+        if (currentSpeed_ < targetSpeed_)
         {
-            currentSpeed_ = 0;
+            currentSpeed_ = targetSpeed_;
         }
+        if (currentSpeed_ < 0) currentSpeed_ = 0;
     }
 }
 
-void Vehicle::updatePosition(float deltaTime, const Network* network)
+void Vehicle::updatePosition(float deltaTime)
 {
     float distanceToTravel = currentSpeed_ * deltaTime;
     distanceOnSegment_ += distanceToTravel;
@@ -88,23 +100,10 @@ void Vehicle::updatePosition(float deltaTime, const Network* network)
     if (distanceOnSegment_ >= segmentLength)
     {
         float overshootDistance = distanceOnSegment_ - segmentLength;
-        chooseNextSegment(network);
+        chooseNextSegment();
 		distanceOnSegment_ = overshootDistance;
     }
 }
-
-void Vehicle::evaluate()
-{
-    switch (state_)
-    {
-        case VehicleState::PROCEEDING:
-            break;
-        case VehicleState::APPROACHING_YIELD:
-            auto conn{ dynamic_cast<const Connection*>(currentSegment_) };
-            auto collisionAreas{ conn->getCollisionAreas() };
-    }
-}
-
 
 Vector2 Vehicle::getPosition() const
 {

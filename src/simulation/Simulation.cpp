@@ -108,7 +108,7 @@ void Simulation::update()
 	float deltaTime{ GetFrameTime() * simulationSpeed_ };
 	totalTime_ += deltaTime;
 	
-	agentManager_->update(deltaTime, network_.get());
+	agentManager_->update(deltaTime, network_.get(), agentManager_.get());
 }
 
 void Simulation::render()

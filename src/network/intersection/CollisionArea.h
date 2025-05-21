@@ -14,6 +14,9 @@ public:
 	CollisionArea(Connection* thisConnection, Connection* collidingConnection, float collisionDistance);
 
 	const float getCollisionDistance() const { return collisionDistance_; }
+	const Connection* getConnection() const { return thisConnection_; }
+	const Connection* getCollidingConnection() const { return collidingConnection_; }
+
 
 private:
 	int priorityDifference() const;

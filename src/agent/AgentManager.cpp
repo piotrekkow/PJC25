@@ -1,10 +1,10 @@
 #include "AgentManager.h"
 
-void AgentManager::update(float deltaTime, Network* network)
+void AgentManager::update(float deltaTime, Network* network, AgentManager* self)
 {
 	for (auto& vehicle : vehicles_)
 	{
-		vehicle.get()->update(deltaTime, network);
+		vehicle.get()->update(deltaTime, network, self);
 	}
 }
 

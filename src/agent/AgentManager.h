@@ -8,7 +8,7 @@ class AgentManager
 	std::vector<std::unique_ptr<Vehicle>> vehicles_;  
 
 public:  
-	void update(float deltaTime, Network* network);
+	void update(float deltaTime, Network* network, AgentManager* self);
 	const std::vector<const Vehicle*> getVehicles() const;  
 	Vehicle* addVehicle(Segment* initialSegment);
 };

@@ -4,35 +4,41 @@
 #include "Lane.h"
 #include "Connection.h"
 #include <raylib.h>
+#include <deque>
 
 class Renderer;
 class Network;
+class AgentManager;
 
-enum class VehicleState
+enum class TrafficRuleState
 {
-    PROCEEDING,
-    APPROACHING_STOP,
+	HAS_PRIORITY,
     APPROACHING_YIELD,
-    WAITING_FOR_CLEARANCE
+	APPROACHING_STOP
+};
+
+enum class VehicleBehaviorState
+{
+    LEADING,
+    FOLLOWING
 };
 
 class Vehicle
 {
-    VehicleState state_{ VehicleState::PROCEEDING };
     Segment* currentSegment_;
     Segment* initialSegment_;
-    float distanceOnSegment_;   // m
-    float currentSpeed_;        // m/s
-    float targetSpeed_;         // m/s
-    const float acceleration_;        // m/s^2
-    const float length_;              // m
-    const float width_;               // m
+    float distanceOnSegment_;       // m
+    float currentSpeed_;            // m/s
+    float targetSpeed_;             // m/s
+    const float acceleration_;      // m/s^2
+    const float length_;            // m
+    const float width_;             // m
     const Color color_;
 
 public:
     Vehicle(Segment* initialSegment, float initialSpeed = 10.0f, Color color = GREEN);
 
-    void update(float deltaTime, const Network* network);
+    void update(float deltaTime, const Network* network, const AgentManager* agentManager);
 
     Vector2 getPosition() const;
     Vector2 getDirection() const;
@@ -40,9 +46,14 @@ public:
     const float getWidth() const { return width_; }
     const Color getColor() const { return color_; }
 
+    bool isWaitingAtJunction_;      // Simplified flag, might be redundant with ruleState_
+    float designatedStoppingPoint_; // Distance on currentSegment_ to stop at
+    float defaultTargetSpeed_;      // Target speed when not affected by rules
+
+
 private:
-    void chooseNextSegment(const Network* network);
+    void chooseNextSegment();
     void updateSpeed(float deltaTime);
-	void updatePosition(float deltaTime, const Network* network);
-    void evaluate();
+	void updatePosition(float deltaTime);
+    
 };
