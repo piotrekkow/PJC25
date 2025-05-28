@@ -3,6 +3,7 @@
 #include "Segment.h"
 #include "Lane.h"
 #include "Connection.h"
+#include "Driver.h"
 #include <raylib.h>
 #include <deque>
 
@@ -25,6 +26,7 @@ enum class VehicleBehaviorState
 
 class Vehicle
 {
+	// std::unique_ptr<Driver> driver_;
     Segment* currentSegment_;
     Segment* initialSegment_;
     float distanceOnSegment_;       // m
@@ -47,7 +49,7 @@ public:
     const Color getColor() const { return color_; }
 
     bool isWaitingAtJunction_;      // Simplified flag, might be redundant with ruleState_
-    float designatedStoppingPoint_; // Distance on currentSegment_ to stop at
+    // float designatedStoppingPoint_; // Distance on currentSegment_ to stop at
     float defaultTargetSpeed_;      // Target speed when not affected by rules
 
 

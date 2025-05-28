@@ -25,9 +25,9 @@ class Intersection
 public:
 	Intersection() = default;
 	~Intersection();
-	void addIncomingLink(Link* link);
-	void addOutgoingLink(Link* link);
-	Connection* addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority, float angleThreshold = 30.0f * DEG2RAD);
+	void addIncomingLink(Link* link) { incomingLinks_.emplace_back(link); }
+	void addOutgoingLink(Link* link) { outgoingLinks_.emplace_back(link); }
+	Connection* addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority);
 	const std::vector<const Connection*> getConnections() const;
 	void updateCollisionPoints();
 

@@ -10,8 +10,8 @@ class Simulation
 	double totalTime_{ 0 };
 
 	/** Simulation speed multiplier */
-	float simulationSpeed_{ 1.0f };
-	bool isPaused_{ false };
+	float simulationSpeed_;
+	bool isPaused_;
 
 	std::unique_ptr<Network> network_;
 	std::unique_ptr<Renderer> renderer_;

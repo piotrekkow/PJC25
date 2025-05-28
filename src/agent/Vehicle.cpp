@@ -42,30 +42,17 @@ void Vehicle::update(float deltaTime, [[maybe_unused]] const Network* network, [
 
 void Vehicle::chooseNextSegment()
 {
-	Connection* conn = dynamic_cast<Connection*>(currentSegment_);
-	Lane* lane = dynamic_cast<Lane*>(currentSegment_);
-    if (conn)
+    std::vector<Segment*> nextSegmentOptions{ currentSegment_->getNextSegments() };
+    if (!nextSegmentOptions.empty())
     {
-        currentSegment_ = const_cast<Lane*>(conn->nextLane());
+		currentSegment_ = nextSegmentOptions[0]; // For now, just choose the first available segment
         distanceOnSegment_ = 0;
-    }
-    else if (lane)
-    {
-        if (!lane->getNextConnections().empty())
-        {
-            currentSegment_ = lane->getNextConnections()[0];
-        }
-        else
-        {
-            std::cerr << "Next lane has no connections.\n";
-            currentSegment_ = initialSegment_;
-        }
-        distanceOnSegment_ = 0;
-    }
+	}
     else
     {
-        currentSegment_ = nullptr;
-        std::cout << "Vehicle reached the end of it's path.\n";
+        std::cerr << "No next segments available for the current segment.\n";
+        currentSegment_ = initialSegment_;
+        distanceOnSegment_ = 0;
     }
 }
 
@@ -108,11 +95,11 @@ void Vehicle::updatePosition(float deltaTime)
 Vector2 Vehicle::getPosition() const
 {
     if (!currentSegment_) return { 0, 0 }; // Default position if no segment
-    return currentSegment_->positionAtDistance(distanceOnSegment_);
+    return currentSegment_->position(distanceOnSegment_);
 }
 
 Vector2 Vehicle::getDirection() const
 {
     if (!currentSegment_) return { 1, 0 }; // Default direction
-    return currentSegment_->tangentAtDistance(distanceOnSegment_);
+    return currentSegment_->tangent(distanceOnSegment_);
 }

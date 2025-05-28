@@ -1,44 +1,13 @@
 #include "Intersection.h"
 #include "utils.h"
-#include "ConnectionStraight.h"
-#include "ConnectionCurved.h"
 #include "Connection.h"
 #include <cmath>
 
 Intersection::~Intersection() = default;
 
-void Intersection::addIncomingLink(Link* link)
+Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority)
 {
-	incomingLinks_.emplace_back(link);
-}
-
-void Intersection::addOutgoingLink(Link* link)
-{
-	outgoingLinks_.emplace_back(link);
-}
-
-Connection* Intersection::addConnection(Lane* inlet, Lane* outlet, TrafficPriority priority, float angleThreshold)
-{
-	float turnAngle{ vector2Angle(inlet->tangentAtDistance(0.0f), outlet->tangentAtDistance(0.0f)) };
-	if (std::abs(turnAngle) > angleThreshold && vector2Distance(inlet->endPosition(), outlet->startPosition()) > 1.0f)
-	{
-		Vector2 controlPoint;
-		bool tangentsIntersect{ lineIntersection(inlet->endPosition(), inlet->tangentAtDistance(0.0f), outlet->startPosition(), outlet->tangentAtDistance(0.0f), controlPoint) };
-		
-		if (tangentsIntersect)
-		{
-			connections_.emplace_back(std::make_unique<ConnectionCurved>(inlet, outlet, priority, controlPoint));
-
-			Connection* addedConnection{ connections_.back().get() };
-			inlet->addNextConnection(addedConnection);
-			return connections_.back().get();
-		}
-	}
-
-	connections_.emplace_back(std::make_unique<ConnectionStraight>(inlet, outlet, priority));
-
-	Connection* addedConnection{ connections_.back().get() };
-	inlet->addNextConnection(addedConnection);
+	connections_.emplace_back(std::make_unique<Connection>(inlet, outlet, priority));
 	return connections_.back().get();
 }
 

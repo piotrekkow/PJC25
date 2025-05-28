@@ -223,7 +223,7 @@ void Renderer::renderCollisionsDebug(const Connection* connection) const
 	{
 		if (collisionPoint)
 		{
-			Vector2 point{ connection->positionAtDistance(collisionPoint->getCollisionDistance()) };
+			Vector2 point{ connection->position(collisionPoint->getCollisionDistance()) };
 			DrawCircleV(point, 0.5f, RED);
 		}
 	}

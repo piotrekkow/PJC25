@@ -18,30 +18,41 @@ enum class TrafficPriority
 class Connection :
 	public Segment
 {
-protected:
+private:
 	Lane* previousLane_;
 	Lane* nextLane_;
 	std::vector<std::unique_ptr<CollisionArea>> collisionAreas_;
 	TrafficPriority priority_;
+	std::vector<Vector2> geometry_;
+	std::vector<float> cumulativeLengths_;
+	float totalLength_;
+	std::optional<Vector2> controlPoint_;
 
 public:
 	Connection(Lane* inletLane, Lane* outletLane, TrafficPriority priority);
 	~Connection() override = default;
 
-	virtual Vector2 positionAtDistance(float distance) const = 0;
-	virtual Vector2 tangentAtDistance(float distance) const = 0;
-	virtual const std::vector<Vector2> geometry() const = 0;
+	const float length() const override { return totalLength_; }
+	const std::vector<Vector2> geometry() const override { return geometry_; }
 
-	const Vector2 startPosition() const override;
+	Vector2 position(float distance) const override;
+	Vector2 tangent(std::optional<float> distance = std::nullopt) const override;
+
 	const Vector2 endPosition() const override;
+	const Vector2 startPosition() const override;
+
+	const std::vector<Segment*> getNextSegments() const;
+	const std::vector<Segment*> getPreviousSegments() const;
 	
 	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance);
 	const std::vector<const CollisionArea*> getCollisionAreas() const;
 	/** @brief Get collision areas past some distance threshold */
 	const std::vector<const CollisionArea*> getCollisionAreas(float distanceThreshold) const;
 
-	const Lane* previousLane() const { return previousLane_; }
-	const Lane* nextLane() const { return nextLane_; }
 	TrafficPriority getPriority() const { return priority_; }
+
+private:
+	void checkForControlPoint(float angleThreshold = DEG2RAD * 30.0f);
+	void calculateGeometry(std::optional<int> numberOfSegmentsPtr = std::nullopt);
 };
 
