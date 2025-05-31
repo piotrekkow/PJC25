@@ -1,15 +1,12 @@
 #pragma once
 
 #include "Segment.h"
-#include "Lane.h"
-#include "Connection.h"
-#include "Driver.h"
 #include <raylib.h>
 #include <deque>
+#include <memory>
 
-class Renderer;
-class Network;
-class AgentManager;
+class Driver;
+class Navigator;
 
 enum class TrafficRuleState
 {
@@ -18,29 +15,22 @@ enum class TrafficRuleState
 	APPROACHING_STOP
 };
 
-enum class VehicleBehaviorState
-{
-    LEADING,
-    FOLLOWING
-};
-
 class Vehicle
 {
-	// std::unique_ptr<Driver> driver_;
-    Segment* currentSegment_;
-    Segment* initialSegment_;
-    float distanceOnSegment_;       // m
-    float currentSpeed_;            // m/s
-    float targetSpeed_;             // m/s
-    const float acceleration_;      // m/s^2
-    const float length_;            // m
-    const float width_;             // m
+    std::unique_ptr<Driver> driver_;
+    std::unique_ptr<Navigator> navigator_;
+
+    float currentSpeed_;                    // m/s
+    const float maxAcceleration_;           // m/s^2
+	const float maxDeceleration_;           // m/s^2
+    const float length_;                    // m
+    const float width_;                     // m
     const Color color_;
 
 public:
     Vehicle(Segment* initialSegment, float initialSpeed = 10.0f, Color color = GREEN);
 
-    void update(float deltaTime, const Network* network, const AgentManager* agentManager);
+    void update(float deltaTime);
 
     Vector2 getPosition() const;
     Vector2 getDirection() const;
@@ -48,14 +38,11 @@ public:
     const float getWidth() const { return width_; }
     const Color getColor() const { return color_; }
 
-    bool isWaitingAtJunction_;      // Simplified flag, might be redundant with ruleState_
-    // float designatedStoppingPoint_; // Distance on currentSegment_ to stop at
-    float defaultTargetSpeed_;      // Target speed when not affected by rules
+    float getCurrentSpeed() const { return currentSpeed_; } // Add this getter
+    float getAcceleration() const { return maxAcceleration_; } // Expose vehicle's max acceleration
+	float getDeceleration() const { return maxDeceleration_; } // Expose vehicle's max deceleration
 
+    float changeInPosition(float deltaTime) const { return currentSpeed_ * deltaTime; }
 
-private:
-    void chooseNextSegment();
-    void updateSpeed(float deltaTime);
-	void updatePosition(float deltaTime);
-    
+private:    
 };

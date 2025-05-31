@@ -133,6 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\agent\Navigator.cpp" />
+    <ClCompile Include="src\agent\PercievedEnvironment.cpp" />
     <ClCompile Include="src\agent\Driver.cpp" />
     <ClCompile Include="src\agent\AgentManager.cpp" />
     <ClCompile Include="src\simulation\InputHandler.cpp" />
@@ -150,6 +152,8 @@
     <ClCompile Include="src\agent\Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\agent\Navigator.h" />
+    <ClInclude Include="src\agent\PercievedEnvironment.h" />
     <ClInclude Include="src\agent\Driver.h" />
     <ClInclude Include="src\agent\AgentManager.h" />
     <ClInclude Include="src\simulation\InputHandler.h" />
