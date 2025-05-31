@@ -14,22 +14,27 @@ Vehicle::Vehicle(Segment* initialSegment, float initialSpeed, Color color)
     , color_{ color }
 {
     navigator_ = std::make_unique<Navigator>(this, initialSegment);
-    driver_ = std::make_unique<Driver>(this, navigator_);
+    driver_ = std::make_unique<Driver>(this, navigator_.get());
 }
 
+Vehicle::~Vehicle() = default;
 
 void Vehicle::update(float deltaTime) 
 {
     navigator_->update(deltaTime);
     driver_->update(deltaTime);
+    if (navigator_->isPathComplete())
+    {
+        markedForDestruction_ = true;
+    }
 }
 
 Vector2 Vehicle::getPosition() const
 {
-    navigator_->getVehiclePosition();
+    return navigator_->getVehiclePosition();
 }
 
 Vector2 Vehicle::getDirection() const
 {
-	navigator_->getVehicleDirection();
+	return navigator_->getVehicleDirection();
 }

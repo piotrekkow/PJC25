@@ -26,9 +26,11 @@ class Vehicle
     const float length_;                    // m
     const float width_;                     // m
     const Color color_;
+    bool markedForDestruction_{ false };
 
 public:
     Vehicle(Segment* initialSegment, float initialSpeed = 10.0f, Color color = GREEN);
+    ~Vehicle();
 
     void update(float deltaTime);
 
@@ -43,6 +45,7 @@ public:
 	float getDeceleration() const { return maxDeceleration_; } // Expose vehicle's max deceleration
 
     float changeInPosition(float deltaTime) const { return currentSpeed_ * deltaTime; }
+	bool isToBeDestroyed() const { return markedForDestruction_; }
 
 private:    
 };

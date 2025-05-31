@@ -13,11 +13,13 @@ class Navigator
 	std::deque<CollisionArea*> collisions_;
 	float distanceOnCurrentSegment_{ 0.0f };
 	Vehicle* vehicle_;
+	bool isPathComplete_{ false };
 
 public:
 	Navigator(Vehicle* vehicle, std::deque<Segment*> path);
 	Navigator(Vehicle* vehicle, Segment* initialSegment);
 	void update(float deltaTime);
+	bool isPathComplete() const { return isPathComplete_; }
 
 	Vector2 getVehiclePosition() const;
 	Vector2 getVehicleDirection() const;
@@ -25,7 +27,7 @@ public:
 private:
 	float updatePosition(float deltaTime);
 	void initializeCollisions();
-	void updateCollisions();
+	void updateCollisionsCurrentSegment();
 	std::deque<Segment*> buildPathFromSegment(Segment* initialSegment);
 };
 

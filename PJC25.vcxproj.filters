@@ -60,10 +60,10 @@
     <ClCompile Include="src\agent\Driver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\agent\PercievedEnvironment.cpp">
+    <ClCompile Include="src\agent\Navigator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\agent\Navigator.cpp">
+    <ClCompile Include="src\agent\CollisionAvoider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,10 +113,10 @@
     <ClInclude Include="src\agent\Driver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\agent\PercievedEnvironment.h">
+    <ClInclude Include="src\agent\Navigator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\agent\Navigator.h">
+    <ClInclude Include="src\agent\CollisionAvoider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

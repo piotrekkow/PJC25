@@ -6,6 +6,15 @@ void AgentManager::update(float deltaTime)
 	{
 		vehicle.get()->update(deltaTime);
 	}
+	// std::remove_if moves the elements to be erased to the end of the container
+	// and returns an iterator to the new logical end of the container.
+	auto it = std::remove_if(vehicles_.begin(), vehicles_.end(),
+		[](const std::unique_ptr<Vehicle>& vehicle_ptr) 
+		{
+			// If unique_ptr is null or vehicle requests destruction,
+			return !vehicle_ptr || vehicle_ptr->isToBeDestroyed();
+		});
+	vehicles_.erase(it, vehicles_.end());
 }
 
 const std::vector<const Vehicle*> AgentManager::getVehicles() const

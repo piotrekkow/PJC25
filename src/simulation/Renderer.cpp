@@ -219,7 +219,7 @@ void Renderer::renderCollisionsDebug(const Connection* connection) const
 		return;
 	}
 
-	for (auto& collisionPoint : connection->getCollisionAreas())
+	for (auto& collisionPoint : connection->collisionAreas())
 	{
 		if (collisionPoint)
 		{

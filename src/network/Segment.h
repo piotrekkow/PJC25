@@ -16,7 +16,7 @@ public:
 	virtual const float length() const = 0;
 	virtual const std::vector<Vector2> geometry() const = 0;
 	virtual const std::vector<CollisionArea*> collisionAreas() const { return std::vector<CollisionArea*>(); }
-	
+
 	/// Position along the segment at a given distance
 	virtual Vector2 position(float distance) const = 0;
 	/// Tangenta vector along the segment at a given distance (distance can be left out for straight segments)

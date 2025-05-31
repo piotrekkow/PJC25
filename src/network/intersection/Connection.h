@@ -45,9 +45,7 @@ public:
 	const std::vector<Segment*> getPreviousSegments() const;
 	
 	CollisionArea* addCollisionArea(Connection* collidingConnection, float collisionDistance);
-	const std::vector<const CollisionArea*> getCollisionAreas() const;
-	/** @brief Get collision areas past some distance threshold */
-	const std::vector<const CollisionArea*> getCollisionAreas(float distanceThreshold) const;
+	const std::vector<CollisionArea*> collisionAreas() const override;
 
 	TrafficPriority getPriority() const { return priority_; }
 
